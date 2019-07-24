@@ -1,6 +1,6 @@
 {
   "name": "redux-entity-routines",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Keep your domain objects in one place",
   "main": "index.js",
   "scripts": {
