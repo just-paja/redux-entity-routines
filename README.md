@@ -1,3 +1,12 @@
+[![CircleCI](https://circleci.com/gh/just-paja/redux-entity-routines.svg?style=shield)](https://circleci.com/gh/just-paja/redux-entity-routines)
+[![Code Climate](https://codeclimate.com/github/just-paja/redux-entity-routines/badges/gpa.svg)](https://codeclimate.com/github/just-paja/redux-entity-routines)
+[![Test Coverage](https://codeclimate.com/github/just-paja/redux-entity-routines/badges/coverage.svg)](https://codeclimate.com/github/just-paja/redux-entity-routines/coverage)
+[![Issue Count](https://codeclimate.com/github/just-paja/redux-entity-routines/badges/issue_count.svg)](https://codeclimate.com/github/just-paja/redux-entity-routines)
+[![dependencies Status](https://david-dm.org/just-paja/redux-entity-routines/status.svg)](https://david-dm.org/just-paja/redux-entity-routines)
+[![devDependencies Status](https://david-dm.org/just-paja/redux-entity-routines/dev-status.svg)](https://david-dm.org/just-paja/redux-entity-routines?type=dev)
+[![Known Vulnerabilities](https://snyk.io/test/github/just-paja/redux-entity-routines/badge.svg)](https://snyk.io/test/github/just-paja/redux-entity-routines)
+
+
 # redux-entity-routines
 
 Store domain objects in one place and operate on it. Originally inspired by redux-form, redux-routines and normalizr. The entity store is agnostic to the technology you use to get the data, it can be redux saga, ngrx, or even plain promises. It react to redux actions.
