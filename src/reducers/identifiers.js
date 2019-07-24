@@ -2,19 +2,19 @@ export function filterUnique (item, index, src) {
   return src.indexOf(item) === index
 }
 
-function filterItem (identAttr, ident) {
+function filterItem (config, ident) {
   return function (item) {
-    return item[identAttr] === ident
+    return getIdentifier(item, config) === ident
   }
 }
 
-export function getItemIndex (state, identAttr, ident) {
-  return state.findIndex(filterItem(identAttr, ident))
+export function getItemIndex (state, config, ident) {
+  return state.findIndex(filterItem(config, ident))
 }
 
-export function getIdentifier (payload, identAttr) {
-  if (payload && payload[identAttr]) {
-    return payload[identAttr]
+export function getIdentifier (payload, config) {
+  if (payload && payload[config.identAttr]) {
+    return payload[config.identAttr]
   }
   if (typeof payload === 'string') {
     return payload

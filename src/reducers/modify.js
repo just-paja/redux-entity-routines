@@ -7,7 +7,7 @@ export const modify = reduceArray(requireIdent(function (state, action, config, 
   if (!reducer) {
     throw new Error('You must pass reducer function to the modify reducer')
   }
-  const itemIndex = getItemIndex(state, identAttr, ident)
+  const itemIndex = getItemIndex(state, config, ident)
   const item = state[itemIndex]
   const result = filterAttrs(ignoreAttrs, {
     ...reducer(item, action),

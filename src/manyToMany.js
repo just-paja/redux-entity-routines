@@ -17,7 +17,7 @@ class ManyToMany extends Relation {
         }
         const ident = carrier[src.identAttr]
         const payload = items.map((item) => {
-          const itemIndex = getItemIndex(state, config.identAttr, item[config.identAttr])
+          const itemIndex = getItemIndex(state, config, item[config.identAttr])
           const relatedItems = itemIndex === -1
             ? [ident]
             : state[itemIndex][src.name].concat([ident])

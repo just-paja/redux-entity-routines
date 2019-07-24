@@ -16,7 +16,7 @@ export function reduceArray (reducer) {
 
 export function requireIdent (reducer) {
   return function (state, action, config) {
-    const ident = getIdentifier(action.payload, config.identAttr)
+    const ident = getIdentifier(action.payload, config)
     return ident
       ? reducer(state, action, config, ident)
       : state
