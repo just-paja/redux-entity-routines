@@ -26,9 +26,20 @@ jobs:
           key: dependencies-{{ checksum "package-lock.json" }}
 
       - run:
+          name: Install code climate reporter
+          command: |
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+            chmod +x ./cc-test-reporter
+            ./cc-test-reporter before-build
+
+      - run:
           name: Run tests
           command: npm test
 
       - run:
           name: Run build
           command: npm run build
+
+      - run:
+          name: Publish coverage
+          command: ./cc-test-reporter after-build
