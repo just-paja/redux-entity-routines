@@ -1,4 +1,4 @@
-import { STAGES_ASYNC, STAGE_FAILURE, STAGE_FULFILL, STAGE_REQUEST, STAGE_SUCCESS } from './constants'
+import { STAGES_ASYNC, STAGE_FAILURE, STAGE_FULFILL, STAGE_REQUEST, STAGE_SUCCESS } from '../constants'
 
 const initialState = {
   error: null,

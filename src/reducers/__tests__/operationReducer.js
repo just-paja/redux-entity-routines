@@ -1,4 +1,5 @@
-import { createAsyncRoutine, operations } from '..'
+import { createAsyncRoutine } from '../../routines'
+import { operations } from '..'
 
 describe('operations reducer', () => {
   it('returns empty object as initial state', () => {

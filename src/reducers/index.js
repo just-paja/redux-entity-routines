@@ -1,5 +1,6 @@
 export * from './decorators'
 export * from './entityReducer'
+export * from './operationReducer'
 export * from './identifiers'
 export * from './modify'
 export * from './remove'
