@@ -52,7 +52,7 @@ const operationMap = {
 
 function requireStage (reducer) {
   return function (state = {}, action) {
-    const stage = getStage(action.type)
+    const stage = action.type && getStage(action.type)
     return stage ? reducer(state, action, stage) : state
   }
 }
