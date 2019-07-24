@@ -9,6 +9,6 @@ export function createModifyReducer (reducer) {
   return reduceArray(requireIdent(function (state, action, config, ident) {
     const itemIndex = getItemIndex(state, config, ident)
     const payload = reducer(state[itemIndex], action)
-    return upsertItem(state, { payload }, config, ident, itemIndex)
+    return upsertItem(state, { payload }, config, itemIndex)
   }))
 }

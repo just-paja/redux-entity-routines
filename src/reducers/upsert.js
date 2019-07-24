@@ -8,7 +8,7 @@ function processEntity (config, entity) {
   return entity
 }
 
-export function upsertItem (state, action, config, ident, itemIndex) {
+export function upsertItem (state, action, config, itemIndex) {
   if (itemIndex === -1) {
     return [
       ...state,
@@ -24,5 +24,5 @@ export function upsertItem (state, action, config, ident, itemIndex) {
 }
 
 export const upsert = reduceArray(requireIdent(function (state, action, config, ident) {
-  return upsertItem(state, action, config, ident, getItemIndex(state, config, ident))
+  return upsertItem(state, action, config, getItemIndex(state, config, ident))
 }))
