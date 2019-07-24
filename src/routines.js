@@ -1,5 +1,5 @@
 import { composeActionType, createActionCreator } from './actions'
-import { createOperationSelector, getOperationProp } from './selectors'
+import { createOperationSelector, getOperationFlag, getOperationProp } from './selectors'
 
 import camelCase from 'camelcase'
 
@@ -32,11 +32,10 @@ export function createAsyncRoutine (baseName) {
   routine.SUCCESS = composeActionType(baseName, 'SUCCESS')
   routine.success = createActionCreator(routine.SUCCESS)
 
-  const getOperationState = createOperationSelector(baseName)
-  routine.getState = getOperationState
-  routine.getError = getOperationProp(getOperationState, 'error')
-  routine.isInitialized = getOperationProp(getOperationState, 'initialized')
-  routine.isLoading = getOperationProp(getOperationState, 'loading')
+  routine.getState = createOperationSelector(baseName)
+  routine.getError = getOperationProp(routine.getState, 'error')
+  routine.isInitialized = getOperationFlag(routine.getState, 'initialized')
+  routine.isLoading = getOperationFlag(routine.getState, 'loading')
 
   return routine
 }

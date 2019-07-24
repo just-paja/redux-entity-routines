@@ -24,10 +24,14 @@ function getOperationsState (state) {
 export function createOperationSelector (operationName) {
   return createSelector(
     getOperationsState,
-    operations => operations[operationName]
+    operations => operations[operationName] || null
   )
 }
 
 export function getOperationProp (getOperation, prop) {
-  return createSelector(getOperation, getProp(prop))
+  return createSelector(getOperation, () => prop, getProp)
+}
+
+export function getOperationFlag (getOperation, prop) {
+  return createSelector(getOperationProp(getOperation, prop), getFlag)
 }
