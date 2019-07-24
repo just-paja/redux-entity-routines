@@ -23,21 +23,22 @@ export function createEntityReducer (config) {
     ...reducerOptions
   } = config
   return function entityReducer (state = [], action) {
-    if (isActionRecognized(collectionReducers, action)) {
-      return collectionReducers[action.type](state, action, reducerOptions)
-    }
-    if (isActionInRoutines(providedBy, action)) {
-      return upsert(state, action, reducerOptions)
-    }
-    if (isActionRecognized(on, action)) {
-      return modify(state, action, { ...reducerOptions, reducer: on[action.type] })
-    }
-    if (isActionInRoutines(deletedBy, action)) {
-      return remove(state, action, reducerOptions)
-    }
     if (isActionInRoutines(clearedBy, action)) {
       return []
     }
-    return state
+    let nextState = state
+    if (isActionRecognized(collectionReducers, action)) {
+      nextState = collectionReducers[action.type](nextState, action, reducerOptions)
+    }
+    if (isActionInRoutines(providedBy, action)) {
+      nextState = upsert(nextState, action, reducerOptions)
+    }
+    if (isActionRecognized(on, action)) {
+      nextState = modify(nextState, action, { ...reducerOptions, reducer: on[action.type] })
+    }
+    if (isActionInRoutines(deletedBy, action)) {
+      nextState = remove(nextState, action, reducerOptions)
+    }
+    return nextState
   }
 }
