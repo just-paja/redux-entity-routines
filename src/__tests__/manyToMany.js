@@ -1,4 +1,5 @@
 import { createEntitiesReducer, createEntityStore, createRoutine } from '..'
+import { createManyToMany } from '../ManyToMany'
 
 describe('store manyToMany', () => {
   it('does not fail given target name is missing in parent payload', () => {
@@ -221,7 +222,7 @@ describe('store manyToMany', () => {
     ])
   })
 
-  it('getFirst returns item with mapped manyToMany relation from parent store', () => {
+  it('getObject returns item with mapped manyToMany relation from parent store', () => {
     const soundsRoutine = createRoutine('SOUNDS')
     const tagsRoutine = createRoutine('TAGS')
     const sounds = createEntityStore('sounds', {
@@ -260,7 +261,7 @@ describe('store manyToMany', () => {
         ]
       }
     }
-    expect(sounds.getFirst(state, '4')).toHaveProperty('tags', ['5', '7'])
+    expect(sounds.getObject(state, '4')).toHaveProperty('tags', ['5', '7'])
   })
 
   it('getAll returns item with mapped manyToMany relation from parent store', () => {
@@ -349,6 +350,24 @@ describe('store manyToMany', () => {
     }
     const payload = getRandSounds(1000)
     const state = reducer(undefined, soundsRoutine.success(payload))
-    sounds.getFirst({ entities: state }, 10)
+    sounds.getObject({ entities: state }, 10)
+  })
+
+  it('converts relationship representation to string in a readable way', () => {
+    const parent = createEntityStore('user', {
+      hasManyToMany: ['group']
+    })
+    const target = createEntityStore('group')
+    const relations = createManyToMany([parent, target])
+    expect(relations[0] + '').toBe('manyToMany(user:group)')
+  })
+
+  it('throws exception given target store does not exist', () => {
+    const parent = createEntityStore('user', {
+      hasManyToMany: ['group']
+    })
+    expect(() => {
+      createManyToMany([parent])
+    }).toThrow(new Error('Cannot find entity store called group'))
   })
 })

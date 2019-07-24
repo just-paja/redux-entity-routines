@@ -34,6 +34,7 @@ export function createSyncRoutine (baseName) {
   const TRIGGER = baseName
   const trigger = createAction(TRIGGER)
   trigger.TRIGGER = TRIGGER
+  trigger.trigger = trigger
   return trigger
 }
 

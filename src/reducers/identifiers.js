@@ -2,7 +2,7 @@ export function filterUnique (item, index, src) {
   return src.indexOf(item) === index
 }
 
-function filterItem (config, ident) {
+export function filterItem (config, ident) {
   return function (item) {
     return getIdentifier(item, config) === ident
   }
@@ -13,8 +13,10 @@ export function getItemIndex (state, config, ident) {
 }
 
 export function getIdentifier (payload, config) {
-  if (payload && payload[config.identAttr]) {
-    return payload[config.identAttr]
+  const identAttr = config.identAttr || 'uuid'
+
+  if (payload && payload[identAttr]) {
+    return payload[identAttr]
   }
   if (typeof payload === 'string') {
     return payload

@@ -82,7 +82,7 @@ describe('entityStore', () => {
     ])
   })
 
-  it('getFirst selector returns entity matching identAttr given it exists', () => {
+  it('getObject selector returns entity matching identAttr given it exists', () => {
     const store = createEntityStore('users')
     const state = {
       entities: {
@@ -92,10 +92,10 @@ describe('entityStore', () => {
         ]
       }
     }
-    expect(store.getFirst(state, '2')).toEqual({ uuid: '2', name: 'bar' })
+    expect(store.getObject(state, '2')).toEqual({ uuid: '2', name: 'bar' })
   })
 
-  it('getFirst selector returns null given entity matching identAttr does not exist', () => {
+  it('getObject selector returns null given entity matching identAttr does not exist', () => {
     const store = createEntityStore('users')
     const state = {
       entities: {
@@ -105,7 +105,7 @@ describe('entityStore', () => {
         ]
       }
     }
-    expect(store.getFirst(state, '3')).toEqual(null)
+    expect(store.getObject(state, '3')).toEqual(null)
   })
 
   it('getFlag selector returns true given entity matching identAttr exists and is truthy', () => {

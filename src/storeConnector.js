@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import { createManyToMany } from './manyToMany'
+import { createManyToMany } from './ManyToMany'
 
 export function createEntitiesReducer (...stores) {
   const manyToMany = createManyToMany(stores)

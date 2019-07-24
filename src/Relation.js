@@ -6,7 +6,7 @@ export class Relation extends Configurable {
   }
 
   get name () {
-    return `relationship(${this.connection})`
+    return `relation(${this.connection})`
   }
 
   get parent () {
