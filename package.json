@@ -2,7 +2,7 @@
   "name": "redux-entity-routines",
   "version": "0.1.2",
   "description": "Keep your domain objects in one place",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "build": "babel src -d lib --ignore **/__tests__/*.js,**/__tests__/*.jsx",
     "clean": "rimraf lib",
