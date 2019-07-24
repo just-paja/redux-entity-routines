@@ -1,4 +1,4 @@
-import { filterUnique, getItemIndex, reduceArray, upsert } from './reducers'
+import { getIdentifier, filterUnique, getItemIndex, reduceArray, upsert } from './reducers'
 import { Relation } from './Relation'
 
 class ManyToMany extends Relation {
@@ -15,9 +15,9 @@ class ManyToMany extends Relation {
         if (!items || items.length === 0) {
           return state
         }
-        const ident = carrier[src.identAttr]
+        const ident = getIdentifier(carrier, src.config)
         const payload = items.map((item) => {
-          const itemIndex = getItemIndex(state, config, item[config.identAttr])
+          const itemIndex = getItemIndex(state, config, getIdentifier(item, config))
           const relatedItems = itemIndex === -1
             ? [ident]
             : state[itemIndex][src.name].concat([ident])
@@ -35,7 +35,7 @@ class ManyToMany extends Relation {
         ...item,
         [relatedStore.name]: targets
           ? targets
-            .map((item) => item instanceof Object ? item[relatedStore.identAttr] : item)
+            .map((item) => item instanceof Object ? getIdentifier(item, relatedStore.config) : item)
             .filter(filterUnique)
           : []
       }

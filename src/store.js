@@ -1,7 +1,13 @@
-import { createSelector } from 'reselect'
-import { createSyncRoutine } from './actions'
 import { Configurable } from './Configurable'
 import { createEntityReducer, filterItem, filterUnique } from './reducers'
+import { createSelector } from 'reselect'
+import { createSyncRoutine } from './routines'
+import {
+  getFirstSelectorArg,
+  getFlag,
+  getProp,
+  getSecondSelectorArg
+} from './selectors'
 
 function flat (arrays) {
   return arrays.reduce((acc, arr) => acc.concat(arr), [])
@@ -9,14 +15,6 @@ function flat (arrays) {
 
 function mergeArrays (...args) {
   return flat(args).filter(item => item).filter(filterUnique)
-}
-
-function getFirstSelectorArg (state, arg1) {
-  return arg1
-}
-
-function getSecondSelectorArg (state, arg1, arg2) {
-  return arg2
 }
 
 class EntityStore extends Configurable {
@@ -29,24 +27,9 @@ class EntityStore extends Configurable {
     this.bind('isEmpty')
     this.name = name
 
-    this.getObject = createSelector(
-      this.getCollection,
-      getFirstSelectorArg,
-      this.findItem
-    )
-    this.getProp = createSelector(
-      this.getObject,
-      getSecondSelectorArg,
-      (item, prop) => item ? item[prop] : null
-    )
-    this.getFlag = createSelector(
-      this.getProp,
-      value => Boolean(value)
-    )
-  }
-
-  get identAttr () {
-    return this.config.identAttr || 'uuid'
+    this.getObject = createSelector(this.getCollection, getFirstSelectorArg, this.findItem)
+    this.getProp = createSelector(this.getObject, getSecondSelectorArg, getProp)
+    this.getFlag = createSelector(this.getProp, getFlag)
   }
 
   initialize () {

@@ -1,4 +1,4 @@
-import { createEntityStore, createRoutine } from '..'
+import { createEntityStore, createAsyncRoutine } from '..'
 
 describe('entityStore', () => {
   it('provides clear routine', () => {
@@ -12,11 +12,6 @@ describe('entityStore', () => {
     expect(store).toHaveProperty('name', 'users')
   })
 
-  it('provides uuid as default identAttr', () => {
-    const store = createEntityStore('users')
-    expect(store).toHaveProperty('identAttr', 'uuid')
-  })
-
   it('provides custom identAttr', () => {
     const store = createEntityStore('users', {
       identAttr: 'name'
@@ -25,7 +20,7 @@ describe('entityStore', () => {
   })
 
   it('provides providedBy routines', () => {
-    const routine = createRoutine('TEST')
+    const routine = createAsyncRoutine('TEST')
     const store = createEntityStore('users', {
       providedBy: [routine]
     })
@@ -33,7 +28,7 @@ describe('entityStore', () => {
   })
 
   it('provides deletedBy routines', () => {
-    const routine = createRoutine('TEST')
+    const routine = createAsyncRoutine('TEST')
     const store = createEntityStore('users', {
       deletedBy: [routine]
     })
@@ -41,7 +36,7 @@ describe('entityStore', () => {
   })
 
   it('provides collectionReducers', () => {
-    const routine = createRoutine('TEST')
+    const routine = createAsyncRoutine('TEST')
     const reducer = state => state
     const store = createEntityStore('users', {
       collectionReducers: {
@@ -54,7 +49,7 @@ describe('entityStore', () => {
   })
 
   it('provides on reducers', () => {
-    const routine = createRoutine('TEST')
+    const routine = createAsyncRoutine('TEST')
     const reducer = state => state
     const store = createEntityStore('users', {
       on: {

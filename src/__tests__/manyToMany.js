@@ -1,10 +1,10 @@
-import { createEntitiesReducer, createEntityStore, createRoutine } from '..'
+import { createEntitiesReducer, createEntityStore, createAsyncRoutine } from '..'
 import { createManyToMany } from '../ManyToMany'
 
 describe('store manyToMany', () => {
   it('does not fail given target name is missing in parent payload', () => {
-    const soundsRoutine = createRoutine('SOUNDS')
-    const tagsRoutine = createRoutine('TAGS')
+    const soundsRoutine = createAsyncRoutine('SOUNDS')
+    const tagsRoutine = createAsyncRoutine('TAGS')
     const sounds = createEntityStore('sounds', {
       hasManyToMany: ['tags'],
       providedBy: [soundsRoutine]
@@ -23,8 +23,8 @@ describe('store manyToMany', () => {
   })
 
   it('does not fail given parent name is missing in target payload', () => {
-    const soundsRoutine = createRoutine('SOUNDS')
-    const tagsRoutine = createRoutine('TAGS')
+    const soundsRoutine = createAsyncRoutine('SOUNDS')
+    const tagsRoutine = createAsyncRoutine('TAGS')
     const sounds = createEntityStore('sounds', {
       hasManyToMany: ['tags'],
       providedBy: [soundsRoutine]
@@ -43,8 +43,8 @@ describe('store manyToMany', () => {
   })
 
   it('stores parent entities without manyToMany attribute from parent payload', () => {
-    const soundsRoutine = createRoutine('SOUNDS')
-    const tagsRoutine = createRoutine('TAGS')
+    const soundsRoutine = createAsyncRoutine('SOUNDS')
+    const tagsRoutine = createAsyncRoutine('TAGS')
     const sounds = createEntityStore('sounds', {
       hasManyToMany: ['tags'],
       providedBy: [soundsRoutine]
@@ -86,8 +86,8 @@ describe('store manyToMany', () => {
   })
 
   it('creates relation target entities from parent payload', () => {
-    const soundsRoutine = createRoutine('SOUNDS')
-    const tagsRoutine = createRoutine('TAGS')
+    const soundsRoutine = createAsyncRoutine('SOUNDS')
+    const tagsRoutine = createAsyncRoutine('TAGS')
     const sounds = createEntityStore('sounds', {
       hasManyToMany: ['tags'],
       providedBy: [soundsRoutine]
@@ -137,8 +137,8 @@ describe('store manyToMany', () => {
   })
 
   it('creates relation parent entities from target payload', () => {
-    const soundsRoutine = createRoutine('SOUNDS')
-    const tagsRoutine = createRoutine('TAGS')
+    const soundsRoutine = createAsyncRoutine('SOUNDS')
+    const tagsRoutine = createAsyncRoutine('TAGS')
     const sounds = createEntityStore('sounds', {
       hasManyToMany: ['tags'],
       providedBy: [soundsRoutine]
@@ -180,8 +180,8 @@ describe('store manyToMany', () => {
   })
 
   it('creates relation target entities from target payload', () => {
-    const soundsRoutine = createRoutine('SOUNDS')
-    const tagsRoutine = createRoutine('TAGS')
+    const soundsRoutine = createAsyncRoutine('SOUNDS')
+    const tagsRoutine = createAsyncRoutine('TAGS')
     const sounds = createEntityStore('sounds', {
       hasManyToMany: ['tags'],
       providedBy: [soundsRoutine]
@@ -223,8 +223,8 @@ describe('store manyToMany', () => {
   })
 
   it('getObject returns item with mapped manyToMany relation from parent store', () => {
-    const soundsRoutine = createRoutine('SOUNDS')
-    const tagsRoutine = createRoutine('TAGS')
+    const soundsRoutine = createAsyncRoutine('SOUNDS')
+    const tagsRoutine = createAsyncRoutine('TAGS')
     const sounds = createEntityStore('sounds', {
       hasManyToMany: ['tags'],
       providedBy: [soundsRoutine]
@@ -265,8 +265,8 @@ describe('store manyToMany', () => {
   })
 
   it('getAll returns item with mapped manyToMany relation from parent store', () => {
-    const soundsRoutine = createRoutine('SOUNDS')
-    const tagsRoutine = createRoutine('TAGS')
+    const soundsRoutine = createAsyncRoutine('SOUNDS')
+    const tagsRoutine = createAsyncRoutine('TAGS')
     const sounds = createEntityStore('sounds', {
       hasManyToMany: ['tags'],
       providedBy: [soundsRoutine]
@@ -316,8 +316,8 @@ describe('store manyToMany', () => {
   })
 
   it('processes large amount of data', () => {
-    const soundsRoutine = createRoutine('SOUNDS')
-    const tagsRoutine = createRoutine('TAGS')
+    const soundsRoutine = createAsyncRoutine('SOUNDS')
+    const tagsRoutine = createAsyncRoutine('TAGS')
     const sounds = createEntityStore('sounds', {
       hasManyToMany: ['tags'],
       providedBy: [soundsRoutine]

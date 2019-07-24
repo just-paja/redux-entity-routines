@@ -1,4 +1,4 @@
-import { createEntityReducer, createRoutine } from '..'
+import { createEntityReducer, createAsyncRoutine } from '..'
 
 describe('entity reducer', () => {
   function returnPayload (state, action) {
@@ -6,7 +6,7 @@ describe('entity reducer', () => {
   }
 
   it('returns previous state given action is not recognized', () => {
-    const routine = createRoutine('TEST')
+    const routine = createAsyncRoutine('TEST')
     const reducer = createEntityReducer({})
     const state = [
       { uuid: 'x3', name: 'foo' }
@@ -15,7 +15,7 @@ describe('entity reducer', () => {
   })
 
   it('returns empty array given action success is in clearedBy routines', () => {
-    const routine = createRoutine('TEST')
+    const routine = createAsyncRoutine('TEST')
     const reducer = createEntityReducer({
       clearedBy: [routine]
     })
@@ -26,7 +26,7 @@ describe('entity reducer', () => {
   })
 
   it('deletes item given payload string item exists', () => {
-    const routine = createRoutine('TEST')
+    const routine = createAsyncRoutine('TEST')
     const reducer = createEntityReducer({
       deletedBy: [routine]
     })
@@ -40,7 +40,7 @@ describe('entity reducer', () => {
   })
 
   it('modifies collection when it receives collection reducer action', () => {
-    const routine = createRoutine('TEST')
+    const routine = createAsyncRoutine('TEST')
     const reducer = createEntityReducer({
       collectionReducers: {
         [routine.SUCCESS]: jest.fn().mockImplementation(returnPayload)

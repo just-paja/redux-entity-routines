@@ -13,13 +13,6 @@ function isActionRecognized (on, action) {
   return on && Object.keys(on).indexOf(action.type) !== -1
 }
 
-function configure (reducerOptions) {
-  return {
-    identAttr: 'uuid',
-    ...reducerOptions
-  }
-}
-
 export function createEntityReducer (config) {
   const {
     clearedBy,
@@ -29,19 +22,18 @@ export function createEntityReducer (config) {
     providedBy,
     ...reducerOptions
   } = config
-  const reducerConfig = configure(reducerOptions)
   return function entityReducer (state = [], action) {
     if (isActionRecognized(collectionReducers, action)) {
-      return collectionReducers[action.type](state, action, reducerConfig)
+      return collectionReducers[action.type](state, action, reducerOptions)
     }
     if (isActionInRoutines(providedBy, action)) {
-      return upsert(state, action, reducerConfig)
+      return upsert(state, action, reducerOptions)
     }
     if (isActionRecognized(on, action)) {
-      return modify(state, action, { ...reducerConfig, reducer: on[action.type] })
+      return modify(state, action, { ...reducerOptions, reducer: on[action.type] })
     }
     if (isActionInRoutines(deletedBy, action)) {
-      return remove(state, action, reducerConfig)
+      return remove(state, action, reducerOptions)
     }
     if (isActionInRoutines(clearedBy, action)) {
       return []
