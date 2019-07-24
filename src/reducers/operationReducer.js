@@ -20,7 +20,7 @@ function getBaseName (actionType, stage) {
   return actionType.substr(0, actionType.length - stage.length - 1)
 }
 
-function updateOperation (state, action, baseName, reducer) {
+function reduceOperation (state, action, baseName, reducer) {
   return {
     ...state,
     [baseName]: reducer(state[baseName] || initialState, action)
@@ -43,26 +43,32 @@ function fail (state, action) {
   return { ...state, error: action.payload }
 }
 
-export function operations (state = {}, action) {
-  const stage = getStage(action.type)
-
-  if (!stage) {
-    return state
-  }
-
-  const baseName = getBaseName(action.type, stage)
-
-  if (stage === STAGE_REQUEST) {
-    return updateOperation(state, action, baseName, startLoading)
-  }
-  if (stage === STAGE_SUCCESS) {
-    return updateOperation(state, action, baseName, initialize)
-  }
-  if (stage === STAGE_FULFILL) {
-    return updateOperation(state, action, baseName, stopLoading)
-  }
-  if (stage === STAGE_FAILURE) {
-    return updateOperation(state, action, baseName, fail)
-  }
-  return state
+const operationMap = {
+  [STAGE_FAILURE]: fail,
+  [STAGE_FULFILL]: stopLoading,
+  [STAGE_REQUEST]: startLoading,
+  [STAGE_SUCCESS]: initialize
 }
+
+function requireStage (reducer) {
+  return function (state = {}, action) {
+    const stage = getStage(action.type)
+    return stage ? reducer(state, action, stage) : state
+  }
+}
+
+function requireStageReducer (reducer) {
+  return function (state, action, stage) {
+    const stageReducer = operationMap[stage]
+    return stageReducer ? reducer(state, action, stage, stageReducer) : state
+  }
+}
+
+export const operations = requireStage(requireStageReducer(function (
+  state,
+  action,
+  stage,
+  stageReducer
+) {
+  return reduceOperation(state, action, getBaseName(action.type, stage), stageReducer)
+}))
