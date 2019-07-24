@@ -138,4 +138,39 @@ describe('modify reducer', () => {
       { uuid: 'x9', name: 'bar' }
     ])
   })
+
+  it('appends string item to state', () => {
+    const state = [
+      { uuid: 'x3', name: 'foo' }
+    ]
+    const action = {
+      type: 'TEST',
+      payload: 'x9'
+    }
+    const config = { identAttr: 'uuid' }
+    const reducer = createModifyReducer(jest.fn().mockImplementation(returnPayload))
+    expect(reducer(state, action, config)).toEqual([
+      { uuid: 'x3', name: 'foo' },
+      { uuid: 'x9' }
+    ])
+  })
+
+  it.only('appends string item to state after modifying  it', () => {
+    const state = [
+      { uuid: 'x3', name: 'foo' }
+    ]
+    const action = {
+      type: 'TEST',
+      payload: 'x9'
+    }
+    const config = { identAttr: 'uuid' }
+    const reducer = createModifyReducer(jest.fn().mockImplementation(item => ({
+      ...item,
+      name: 'bar'
+    })))
+    expect(reducer(state, action, config)).toEqual([
+      { uuid: 'x3', name: 'foo' },
+      { uuid: 'x9', name: 'bar' }
+    ])
+  })
 })

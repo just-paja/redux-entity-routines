@@ -150,4 +150,17 @@ describe('upsert reducer', () => {
     }
     expect(upsert(state, action, config)).toBe(state)
   })
+
+  it('appends string item to state', () => {
+    const state = [
+      { uuid: 'x3', name: 'foo' }
+    ]
+    const action = { type: 'TEST', payload: 'x4' }
+    const config = {
+      identAttr: 'uuid'
+    }
+    expect(upsert(state, action, config)).toContainEqual({
+      uuid: 'x4'
+    })
+  })
 })

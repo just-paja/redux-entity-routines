@@ -8,14 +8,18 @@ function processEntity (config, entity) {
   return entity
 }
 
+export function constructItem (config, payload) {
+  const payloadItem = typeof payload === 'string'
+    ? { [config.identAttr]: payload }
+    : payload
+  return { ...config.initialState, ...payloadItem }
+}
+
 export function upsertItem (state, action, config, itemIndex) {
   if (itemIndex === -1) {
     return [
       ...state,
-      processEntity(config, {
-        ...config.initialState,
-        ...action.payload
-      })
+      processEntity(config, constructItem(config, action.payload))
     ]
   }
   const nextState = state.slice()
