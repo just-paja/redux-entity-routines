@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect'
-import { createRoutine } from './actions'
+import { createSyncRoutine } from './actions'
 import { Configurable } from './Configurable'
 import { createEntityReducer, filterItem, filterUnique } from './reducers'
 
@@ -55,7 +55,7 @@ class EntityStore extends Configurable {
   }
 
   createActions () {
-    this.clear = createRoutine(`${this.name.toUpperCase()}/CLEAR`)
+    this.clear = createSyncRoutine(`${this.name.toUpperCase()}/CLEAR`)
     this.configure({ clearedBy: mergeArrays([this.clear], this.config.clearedBy) })
   }
 

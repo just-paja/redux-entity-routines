@@ -3,7 +3,10 @@ import { remove } from './remove'
 import { upsert } from './upsert'
 
 function isActionInRoutines (routines, action) {
-  return routines && routines.some(routine => routine.SUCCESS === action.type)
+  return routines && routines.some(routine => routine.sync
+    ? routine.TRIGGER === action.type
+    : routine.SUCCESS === action.type
+  )
 }
 
 function isActionRecognized (on, action) {
