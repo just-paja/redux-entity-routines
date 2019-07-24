@@ -13,9 +13,17 @@ export function getItemIndex (state, config, ident) {
 }
 
 export function getIdentifier (payload, config) {
+  if (!payload) {
+    return null
+  }
+
+  if (config.identResolver) {
+    return config.identResolver(payload)
+  }
+
   const identAttr = config.identAttr || 'uuid'
 
-  if (payload && payload[identAttr]) {
+  if (payload[identAttr]) {
     return payload[identAttr]
   }
   if (typeof payload === 'string') {

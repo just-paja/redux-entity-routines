@@ -1,6 +1,10 @@
 import { upsert } from '..'
 
 describe('upsert reducer', () => {
+  function halLinkResolver (item) {
+    return item._links.self
+  }
+
   it('returns same state given payload has no ident', () => {
     const state = [
       { uuid: 'x3' }
@@ -35,6 +39,28 @@ describe('upsert reducer', () => {
     ])
   })
 
+  it('appends item to state given payload object item does not exist and it uses HAL link', () => {
+    const state = [
+      { name: 'foo', _links: { self: '/users/1' } }
+    ]
+    const action = {
+      type: 'TEST',
+      payload: {
+        name: 'bar',
+        _links: {
+          self: '/users/2'
+        }
+      }
+    }
+    const config = {
+      identResolver: halLinkResolver
+    }
+    expect(upsert(state, action, config)).toEqual([
+      { name: 'foo', _links: { self: '/users/1' } },
+      { name: 'bar', _links: { self: '/users/2' } }
+    ])
+  })
+
   it('modifies item given payload object item exists', () => {
     const state = [
       { uuid: 'x3', name: 'foo' }
@@ -51,6 +77,25 @@ describe('upsert reducer', () => {
     }
     expect(upsert(state, action, config)).toEqual([
       { uuid: 'x3', name: 'bar' }
+    ])
+  })
+
+  it('modifies item given payload object item exists and it uses HAL link', () => {
+    const state = [
+      { uuid: 'x3', name: 'foo', _links: { self: '/users/1' } }
+    ]
+    const action = {
+      type: 'TEST',
+      payload: {
+        name: 'bar',
+        _links: { self: '/users/1' }
+      }
+    }
+    const config = {
+      identResolver: halLinkResolver
+    }
+    expect(upsert(state, action, config)).toEqual([
+      { name: 'bar', _links: { self: '/users/1' } }
     ])
   })
 
@@ -93,5 +138,16 @@ describe('upsert reducer', () => {
       { uuid: 'x3', name: 'bar' },
       { uuid: 'x9', name: 'bar' }
     ])
+  })
+
+  it('returns previous state given action payload is empty', () => {
+    const state = [
+      { uuid: 'x3', name: 'foo' }
+    ]
+    const action = { type: 'TEST' }
+    const config = {
+      identAttr: 'uuid'
+    }
+    expect(upsert(state, action, config)).toBe(state)
   })
 })

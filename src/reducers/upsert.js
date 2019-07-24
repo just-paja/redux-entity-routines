@@ -8,19 +8,21 @@ function processEntity (config, entity) {
   return entity
 }
 
-export const upsert = reduceArray(requireIdent(function (state, action, config, ident) {
-  const itemIndex = getItemIndex(state, config, ident)
+export function upsertItem (state, action, config, ident, itemIndex) {
   if (itemIndex === -1) {
     return [
       ...state,
       processEntity(config, {
         ...config.initialState,
-        ...action.payload,
-        [config.identAttr]: ident
+        ...action.payload
       })
     ]
   }
   const nextState = state.slice()
   nextState[itemIndex] = processEntity(config, action.payload)
   return nextState
+}
+
+export const upsert = reduceArray(requireIdent(function (state, action, config, ident) {
+  return upsertItem(state, action, config, ident, getItemIndex(state, config, ident))
 }))

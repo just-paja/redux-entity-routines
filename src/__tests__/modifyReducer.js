@@ -5,6 +5,10 @@ describe('modify reducer', () => {
     return action.payload
   }
 
+  function halLinkResolver (item) {
+    return item._links.self
+  }
+
   it('returns same state given payload has no ident', () => {
     const state = [
       { uuid: 'x3' }
@@ -33,25 +37,7 @@ describe('modify reducer', () => {
     expect(() => modify(state, action, config)).toThrow()
   })
 
-  it('appends item to state given payload string item does not exist', () => {
-    const state = [
-      { uuid: 'x3' }
-    ]
-    const action = {
-      type: 'TEST',
-      payload: 'x9'
-    }
-    const config = {
-      identAttr: 'uuid',
-      reducer: jest.fn()
-    }
-    expect(modify(state, action, config)).toEqual([
-      { uuid: 'x3' },
-      { uuid: 'x9' }
-    ])
-  })
-
-  it('appends item to state given payload object item does not exist', () => {
+  it('appends item to state given payload object does not exist', () => {
     const state = [
       { uuid: 'x3', name: 'foo' }
     ]
@@ -72,7 +58,28 @@ describe('modify reducer', () => {
     ])
   })
 
-  it('modifies item given payload object item exists', () => {
+  it('appends item to state given payload HATEOAS object does not exist', () => {
+    const state = [
+      { name: 'foo', _links: { self: '/users/1' } }
+    ]
+    const action = {
+      type: 'TEST',
+      payload: {
+        name: 'bar',
+        _links: { self: '/users/2' }
+      }
+    }
+    const config = {
+      identResolver: halLinkResolver,
+      reducer: jest.fn().mockImplementation(returnPayload)
+    }
+    expect(modify(state, action, config)).toEqual([
+      { name: 'foo', _links: { self: '/users/1' } },
+      { name: 'bar', _links: { self: '/users/2' } }
+    ])
+  })
+
+  it('modifies item given payload object exists', () => {
     const state = [
       { uuid: 'x3', name: 'foo' }
     ]
@@ -92,48 +99,23 @@ describe('modify reducer', () => {
     ])
   })
 
-  it('appends item to state given payload object item does not exist and filters attributes', () => {
+  it('modifies item given payload HATEOAS object exists', () => {
     const state = [
-      { uuid: 'x3', name: 'foo' }
+      { name: 'foo', _links: { self: '/users/1' } }
     ]
     const action = {
       type: 'TEST',
       payload: {
-        description: 'xxx',
         name: 'bar',
-        uuid: 'x9'
+        _links: { self: '/users/1' }
       }
     }
     const config = {
-      identAttr: 'uuid',
-      ignoreAttrs: ['description'],
+      identResolver: halLinkResolver,
       reducer: jest.fn().mockImplementation(returnPayload)
     }
     expect(modify(state, action, config)).toEqual([
-      { uuid: 'x3', name: 'foo' },
-      { uuid: 'x9', name: 'bar' }
-    ])
-  })
-
-  it('modifies item given payload object item exists and filters attributes', () => {
-    const state = [
-      { uuid: 'x3', name: 'foo' }
-    ]
-    const action = {
-      type: 'TEST',
-      payload: {
-        description: 'xxx',
-        name: 'bar',
-        uuid: 'x3'
-      }
-    }
-    const config = {
-      identAttr: 'uuid',
-      ignoreAttrs: ['description'],
-      reducer: jest.fn().mockImplementation(returnPayload)
-    }
-    expect(modify(state, action, config)).toEqual([
-      { uuid: 'x3', name: 'bar' }
+      { name: 'bar', _links: { self: '/users/1' } }
     ])
   })
 

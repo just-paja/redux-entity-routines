@@ -17,7 +17,6 @@ describe('entity reducer', () => {
   it('returns empty array given action success is in clearedBy routines', () => {
     const routine = createRoutine('TEST')
     const reducer = createEntityReducer({
-      ignoreAttrs: ['description'],
       clearedBy: [routine]
     })
     const state = [
@@ -29,7 +28,6 @@ describe('entity reducer', () => {
   it('deletes item given payload string item exists', () => {
     const routine = createRoutine('TEST')
     const reducer = createEntityReducer({
-      ignoreAttrs: ['description'],
       deletedBy: [routine]
     })
     const state = [
