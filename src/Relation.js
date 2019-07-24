@@ -1,5 +1,6 @@
 import { Configurable } from './Configurable'
-export class Relationship extends Configurable {
+
+export class Relation extends Configurable {
   get connection () {
     return `${this.parent.name}:${this.target.name}`
   }

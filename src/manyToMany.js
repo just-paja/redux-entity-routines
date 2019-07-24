@@ -1,7 +1,7 @@
 import { filterUnique, getItemIndex, reduceArray, upsert } from './reducers'
-import { Relationship } from './Relationship'
+import { Relation } from './Relation'
 
-class ManyToMany extends Relationship {
+class ManyToMany extends Relation {
   get name () {
     return `manyToMany(${this.connection})`
   }
