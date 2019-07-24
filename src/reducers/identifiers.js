@@ -12,22 +12,25 @@ export function getItemIndex (state, config, ident) {
   return state.findIndex(filterItem(config, ident))
 }
 
+function resolvePrimitiveIdentifier (payload) {
+  return typeof payload === 'string'
+    ? payload
+    : null
+}
+
+function resolveAttrIdentifier (payload, config) {
+  const identAttr = config.identAttr || 'uuid'
+  return payload[identAttr]
+    ? payload[identAttr]
+    : resolvePrimitiveIdentifier(payload)
+}
+
 export function getIdentifier (payload, config) {
   if (!payload) {
     return null
   }
 
-  if (config.identResolver) {
-    return config.identResolver(payload)
-  }
-
-  const identAttr = config.identAttr || 'uuid'
-
-  if (payload[identAttr]) {
-    return payload[identAttr]
-  }
-  if (typeof payload === 'string') {
-    return payload
-  }
-  return null
+  return config.identResolver
+    ? config.identResolver(payload)
+    : resolveAttrIdentifier(payload, config)
 }
