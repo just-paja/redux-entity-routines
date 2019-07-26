@@ -1,8 +1,8 @@
 export type RoutineList = string[];
 
 export interface FluxAction<Model> {
-  meta: any;
-  payload: Model;
+  meta?: any;
+  payload?: Model;
   type: string;
 }
 
