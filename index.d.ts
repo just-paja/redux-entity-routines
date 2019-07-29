@@ -11,9 +11,15 @@ export interface ActionCreator<Model> {
   (payload: Model, meta: any): FluxAction<Model>
 }
 
-export interface AsyncRoutine<InputType, OutputType> {
-  (payload: InputType): FluxAction<InputType>,
-  (payload: InputType, meta: any): FluxAction<InputType>,
+export interface Routine<InputType> {
+  (): FluxAction<void>;
+  (payload: InputType): FluxAction<InputType>;
+  (payload: InputType, meta: any): FluxAction<InputType>;
+  trigger: ActionCreator<InputType>;
+  TRIGGER: string;
+}
+
+export interface AsyncRoutine<InputType, OutputType> extends Routine<InputType> {
   failure: ActionCreator<Error>;
   FAILURE: string;
   fulfill: ActionCreator<InputType>;
@@ -25,14 +31,12 @@ export interface AsyncRoutine<InputType, OutputType> {
   REQUEST: string;
   success: ActionCreator<OutputType>;
   SUCCESS: string;
-  trigger: ActionCreator<InputType>;
-  TRIGGER: string;
 }
 
 export type Ident = any;
 
 export interface RoutineDict<Model> {
-  [key: string]: Routine<any, Model>;
+  [key: string]: AsyncRoutine<any, Model>;
 }
 
 export interface EntitySelector<StateType, Model> {
@@ -61,8 +65,6 @@ export interface EntityStore<Model> {
   name: string;
 }
 
-export type Routine<InputType, OutputType> = AsyncRoutine<InputType, OutputType>;
-
 export interface ItemReducer<Model> {
   (state: Model, action: FluxAction<Partial<Model>>): Model
 }
@@ -76,16 +78,16 @@ export interface IdentResolver<Model> {
 }
 
 export interface StoreConfig<Model> {
-  clearedBy?: (Routine<any, Model>|Routine<any, Model[]>)[];
+  clearedBy?: (AsyncRoutine<any, Model>|AsyncRoutine<any, Model[]>)[];
   collectionReducers?: ReducerMap<Model[]>;
-  deletedBy?: (Routine<any, Model>|Routine<any, Model[]>)[];
+  deletedBy?: (AsyncRoutine<any, Model>|AsyncRoutine<any, Model[]>)[];
   identAttr?: string;
   identResolver?: IdentResolver<Model>;
   on?: ReducerMap<Model>;
-  providedBy?: (Routine<any, Model>|Routine<any, Model[]>)[];
+  providedBy?: (AsyncRoutine<any, Model>|AsyncRoutine<any, Model[]>)[];
 }
 
-declare module 'redux-entity-routines' {
+declare module 'redux-entity-store' {
   function createAsyncRoutine<InputType, OutputType>(
     baseName: string
   ): AsyncRoutine<InputType, OutputType>;
