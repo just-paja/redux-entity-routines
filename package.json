@@ -1,6 +1,6 @@
 {
-  "name": "redux-entity-routines",
-  "version": "0.1.6",
+  "name": "redux-entity-store",
+  "version": "0.2.0",
   "description": "Keep your domain objects in one place",
   "main": "lib/index.js",
   "scripts": {
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/just-paja/redux-entity-routines.git"
+    "url": "git+https://github.com/just-paja/redux-entity-store.git"
   },
   "keywords": [
     "redux",
@@ -24,9 +24,9 @@
   "author": "Pavel Žák <pavel@zak.global>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/just-paja/redux-entity-routines/issues"
+    "url": "https://github.com/just-paja/redux-entity-store/issues"
   },
-  "homepage": "https://github.com/just-paja/redux-entity-routines#readme",
+  "homepage": "https://github.com/just-paja/redux-entity-store#readme",
   "dependencies": {
     "camelcase": "^5.3.1",
     "redux": "^4.0.4",
