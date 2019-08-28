@@ -1,13 +1,13 @@
-[![CircleCI](https://circleci.com/gh/just-paja/redux-entity-routines.svg?style=shield)](https://circleci.com/gh/just-paja/redux-entity-routines)
-[![Code Climate](https://codeclimate.com/github/just-paja/redux-entity-routines/badges/gpa.svg)](https://codeclimate.com/github/just-paja/redux-entity-routines)
-[![Test Coverage](https://codeclimate.com/github/just-paja/redux-entity-routines/badges/coverage.svg)](https://codeclimate.com/github/just-paja/redux-entity-routines/coverage)
-[![Issue Count](https://codeclimate.com/github/just-paja/redux-entity-routines/badges/issue_count.svg)](https://codeclimate.com/github/just-paja/redux-entity-routines)
-[![dependencies Status](https://david-dm.org/just-paja/redux-entity-routines/status.svg)](https://david-dm.org/just-paja/redux-entity-routines)
-[![devDependencies Status](https://david-dm.org/just-paja/redux-entity-routines/dev-status.svg)](https://david-dm.org/just-paja/redux-entity-routines?type=dev)
-[![Known Vulnerabilities](https://snyk.io/test/github/just-paja/redux-entity-routines/badge.svg)](https://snyk.io/test/github/just-paja/redux-entity-routines)
+[![CircleCI](https://circleci.com/gh/just-paja/redux-entity-store.svg?style=shield)](https://circleci.com/gh/just-paja/redux-entity-store)
+[![Code Climate](https://codeclimate.com/github/just-paja/redux-entity-store/badges/gpa.svg)](https://codeclimate.com/github/just-paja/redux-entity-store)
+[![Test Coverage](https://codeclimate.com/github/just-paja/redux-entity-store/badges/coverage.svg)](https://codeclimate.com/github/just-paja/redux-entity-store/coverage)
+[![Issue Count](https://codeclimate.com/github/just-paja/redux-entity-store/badges/issue_count.svg)](https://codeclimate.com/github/just-paja/redux-entity-store)
+[![dependencies Status](https://david-dm.org/just-paja/redux-entity-store/status.svg)](https://david-dm.org/just-paja/redux-entity-store)
+[![devDependencies Status](https://david-dm.org/just-paja/redux-entity-store/dev-status.svg)](https://david-dm.org/just-paja/redux-entity-store?type=dev)
+[![Known Vulnerabilities](https://snyk.io/test/github/just-paja/redux-entity-store/badge.svg)](https://snyk.io/test/github/just-paja/redux-entity-store)
 
 
-# redux-entity-routines
+# redux-entity-store
 
 Store domain objects in one place and operate on it. Originally inspired by redux-form, redux-routines and normalizr. The entity store is agnostic to the technology you use to get the data, it can be redux saga, ngrx, or even plain promises. It react to redux actions.
 
@@ -19,7 +19,7 @@ import {
   createEntitiesReducer,
   createEntityRoutines,
   createEntityStore
-} from 'redux-entity-routines'
+} from 'redux-entity-store'
 
 // 1. Create asynchronous entity routines
 const soundRoutines = createEntityRoutines('SOUND', [
@@ -331,7 +331,65 @@ const userStore = createEntityStore('users', {
 
 In case you expect to receive nested entity objects, it is useful to define relations between object entities. All entity stores are automagically connected in a way that it will distribute entities to their stores and reference them as in relational database.
 
+### Belongs to
+
+The classic "1:n". It will automatically store the target collection objects on provider actions.
+
+```javascript
+const petRoutines = createEntityRoutines('pets', ['LOAD_ALL'])
+const userStore = createEntityStore('users')
+const petStore = createEntityStore('pets', {
+  providedBy: [petRoutines.loadAll],
+  belongsTo: [
+    { collection: 'users', attr: 'owner' }
+  ]
+})
+```
+
+
+Consider following action being dispatched:
+
+```json
+{
+  "type": "PETS/LOAD_ALL/SUCCESS",
+  "payload": [
+    {
+      "uuid": 1,
+      "name": "Spot",
+      "owner": {
+        "uuid": 3,
+        "name": "LCDR Data"
+      }
+    }
+  ]
+}
+```
+
+Entity store will distribute and reference the state.
+
+```json
+{
+  "entities": {
+    "pets": [
+      {
+        "uuid": 1,
+        "name": "Spot",
+        "owner": 3
+      }
+    ],
+    "users": [
+      {
+        "uuid": 3,
+        "name": "LCDR Data"
+      }
+    ]
+  }
+}
+```
+
 ### Many To Many
+
+The classic "m:n" kind
 
 ```javascript
 const groupRoutines = createEntityRoutines('groups', ['LOAD_ALL'])
@@ -407,7 +465,7 @@ Entity store will distribute and reference the state.
 }
 ```
 
-### belongsTo, hasMany
+### hasMany
 
 To be done. These were not needed yet.
 
@@ -471,7 +529,7 @@ Given following state, it would return object representing Commander Data.
     "users": [
       {
         "id": 1,
-        "name": "Data"
+        "name": "LCDR Data"
       }
     ]
   },

@@ -155,7 +155,7 @@ describe('modify reducer', () => {
     ])
   })
 
-  it.only('appends string item to state after modifying  it', () => {
+  it('appends string item to state after modifying  it', () => {
     const state = [
       { uuid: 'x3', name: 'foo' }
     ]
