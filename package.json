@@ -1,6 +1,6 @@
 {
   "name": "redux-entity-store",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Keep your domain objects in one place",
   "main": "lib/index.js",
   "scripts": {
