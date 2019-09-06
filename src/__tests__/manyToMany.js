@@ -370,4 +370,25 @@ describe('store manyToMany', () => {
       createManyToMany([parent])
     }).toThrow(new Error('Cannot find entity store called group'))
   })
+
+  it('does not fail given target has no providers', () => {
+    const soundsRoutine = createAsyncRoutine('SOUNDS')
+    const sounds = createEntityStore('sounds', {
+      hasManyToMany: ['tags'],
+      providedBy: [soundsRoutine]
+    })
+    const tags = createEntityStore('tags', {})
+    expect(() => createEntitiesReducer(sounds, tags)).not.toThrow()
+  })
+
+  it('does not fail given parent has no providers', () => {
+    const tagRoutine = createAsyncRoutine('TAGS')
+    const sounds = createEntityStore('sounds', {
+      hasManyToMany: ['tags']
+    })
+    const tags = createEntityStore('tags', {
+      providedBy: [tagRoutine]
+    })
+    expect(() => createEntitiesReducer(sounds, tags)).not.toThrow()
+  })
 })

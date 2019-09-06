@@ -7,6 +7,9 @@ class ManyToMany extends Relation {
   }
 
   createUpsertReducers (src) {
+    if (!src.config.providedBy) {
+      return []
+    }
     return src.config.providedBy.reduce((acc, routine) => ({
       ...acc,
       [routine.SUCCESS]: reduceArray(function (state, action, config) {
@@ -43,12 +46,8 @@ class ManyToMany extends Relation {
   }
 
   configureStores () {
-    if (this.target.config.providedBy) {
-      this.parent.extend('collectionReducers', this.createUpsertReducers(this.target))
-    }
-    if (this.parent.config.providedBy) {
-      this.target.extend('collectionReducers', this.createUpsertReducers(this.parent))
-    }
+    this.parent.extend('collectionReducers', this.createUpsertReducers(this.target))
+    this.target.extend('collectionReducers', this.createUpsertReducers(this.parent))
     this.parent.append('entityProcessors', this.createEntityProcessor(this.target))
     this.target.append('entityProcessors', this.createEntityProcessor(this.parent))
   }
