@@ -53,4 +53,19 @@ describe('entity reducer', () => {
       { uuid: 'x1' }
     ])
   })
+
+  it('modifies item when it receives "on" action', () => {
+    const routine = createAsyncRoutine('TEST')
+    const reducer = createEntityReducer({
+      on: {
+        [routine.SUCCESS]: jest.fn().mockImplementation(returnPayload)
+      }
+    })
+    const state = [
+      { uuid: 'x3' }
+    ]
+    expect(reducer(state, routine.success([{ uuid: 'x3', name: 'foo', description: 'xxx' }]))).toEqual([
+      { uuid: 'x3', name: 'foo', description: 'xxx' }
+    ])
+  })
 })
