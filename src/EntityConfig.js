@@ -1,3 +1,4 @@
+import { ACTION_PATH_SEPARATOR } from './constants'
 import { NamedObject } from './NamedObject'
 
 function formatEntityWithComplexIdentifier (identifier, item) {
@@ -33,6 +34,7 @@ export class EntityConfig extends NamedObject {
     clearedBy,
     collectionReducers,
     deletedBy,
+    entityProcessors,
     hasManyToMany,
     identSource,
     name,
@@ -41,17 +43,27 @@ export class EntityConfig extends NamedObject {
   }) {
     super(name)
     this.configureFormatter(identSource)
-    this.configureReducers(clearedBy, collectionReducers, deletedBy, on, providedBy)
+    this.configureReducers(clearedBy, collectionReducers, deletedBy, entityProcessors, on, providedBy)
     this.configureRelations(belongsTo, hasManyToMany)
+    this.configureRoutines(clearedBy, deletedBy, providedBy)
     this.configureResolver(identSource)
   }
 
-  configureReducers (clearedBy, collectionReducers, deletedBy, on, providedBy) {
-    this.clearedBy = clearedBy
+  configureReducers (clearedBy, collectionReducers, deletedBy, entityProcessors, on, providedBy) {
     this.collectionReducers = collectionReducers
-    this.deletedBy = deletedBy
+    this.entityProcessors = entityProcessors
     this.on = on
+  }
+
+  configureRoutines (clearedBy, deletedBy, providedBy) {
+    this.clearedBy = clearedBy
+    this.deletedBy = deletedBy
     this.providedBy = providedBy
+    this.routines = [
+      ...(this.clearedBy || []),
+      ...(this.deletedBy || []),
+      ...(this.providedBy || [])
+    ]
   }
 
   configureRelations (belongsTo, hasManyToMany) {
@@ -86,6 +98,21 @@ export class EntityConfig extends NamedObject {
 
   getIdentifier (item) {
     return item ? item[this.identInternal] || this.resolveIdent(item) : null
+  }
+
+  getRoutineEntityConfig (action) {
+    if (!action.type) {
+      return null
+    }
+    const routine = this.routines.find((routine) => {
+      return action.type.indexOf(`${routine.routineName}${ACTION_PATH_SEPARATOR}`) === 0
+    })
+    return routine ? routine.entityConfig : null
+  }
+
+  getRoutineEntityPath (action) {
+    const config = this.getRoutineEntityConfig(action)
+    return config ? config[this.name] : null
   }
 
   resolveIdent (item) {

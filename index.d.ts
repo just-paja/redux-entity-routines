@@ -79,14 +79,21 @@ export interface IdentResolver<Model> {
 
 export type IdentSource = string | string[] | IdentResolver<any>;
 
+export interface RelationConfig {
+  collection: string;
+  attr: string;
+}
+
 export interface EntityConfig<Model> {
   clearedBy?: (AsyncRoutine<any, Model>|AsyncRoutine<any, Model[]>)[];
   collectionReducers?: ReducerMap<Model[]>;
   deletedBy?: (AsyncRoutine<any, Model>|AsyncRoutine<any, Model[]>)[];
-  identSource: IdentSource
+  identSource: IdentSource;
   name: string;
   on?: ReducerMap<Model>;
   providedBy?: (AsyncRoutine<any, Model>|AsyncRoutine<any, Model[]>)[];
+  belongsTo?: RelationConfig[];
+  hasManyToMany?: RelationConfig[];
 }
 
 declare module 'redux-entity-store' {
@@ -102,7 +109,7 @@ declare module 'redux-entity-store' {
 
   function createEntityStore<Model>(
     storeName: string,
-    storeConfig: StoreConfig<Model>,
+    storeConfig: EntityConfig<Model>,
   ): EntityStore<Model>
 
   function createEntitiesReducer(...stores: EntityStore<any>[]): any;

@@ -1,4 +1,4 @@
-import { createView } from '../..'
+import { createAsyncRoutine } from '../..'
 import { views } from '..'
 
 describe('views', () => {
@@ -7,7 +7,7 @@ describe('views', () => {
   })
 
   it('returns previous state on trigger', () => {
-    const view = createView('USER_LIST')
+    const view = createAsyncRoutine('USER_LIST')
     const state = {}
     const result = views(state, view.trigger([
       {
@@ -19,7 +19,7 @@ describe('views', () => {
   })
 
   it('returns previous state on request', () => {
-    const view = createView('USER_LIST')
+    const view = createAsyncRoutine('USER_LIST')
     const state = {}
     const result = views(state, view.request([
       {
@@ -31,7 +31,7 @@ describe('views', () => {
   })
 
   it('returns previous state on failure', () => {
-    const view = createView('USER_LIST')
+    const view = createAsyncRoutine('USER_LIST')
     const state = {}
     const result = views(state, view.failure([
       {
@@ -43,7 +43,7 @@ describe('views', () => {
   })
 
   it('returns previous state on fulfill', () => {
-    const view = createView('USER_LIST')
+    const view = createAsyncRoutine('USER_LIST')
     const state = {}
     const result = views(state, view.fulfill([
       {
@@ -55,7 +55,7 @@ describe('views', () => {
   })
 
   it('stores entity links on view success', () => {
-    const view = createView('USER_LIST')
+    const view = createAsyncRoutine('USER_LIST')
     const state = {}
     const result = views(state, view.success([
       {

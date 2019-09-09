@@ -1,28 +1,28 @@
 import { composeActionType, createActionCreator } from './actions'
 import { createOperationSelector, getOperationFlag, getOperationProp } from './selectors'
-import { VIEW_PREFIX } from './constants'
 
 import camelCase from 'camelcase'
 
-export function createRoutine (baseName, entities) {
+export function createRoutine (baseName, entityConfig) {
   const routine = createActionCreator(baseName)
   routine.routineName = baseName
-  routine.entities = entities
+  routine.entityConfig = entityConfig
   return routine
 }
 
-export function createSyncRoutine (baseName, entities) {
-  const routine = createRoutine(baseName, entities)
+export function createSyncRoutine (baseName, entityConfig) {
+  const routine = createRoutine(baseName, entityConfig)
   routine.trigger = routine
   routine.TRIGGER = baseName
   routine.sync = true
   return routine
 }
 
-export function createAsyncRoutine (baseName, entities) {
+export function createAsyncRoutine (baseName, entityConfig) {
   const TRIGGER = composeActionType(baseName, 'TRIGGER')
-  const routine = createRoutine(TRIGGER, entities)
+  const routine = createRoutine(TRIGGER, entityConfig)
 
+  routine.routineName = baseName
   routine.trigger = routine
   routine.TRIGGER = TRIGGER
   routine.FAILURE = composeActionType(baseName, 'FAILURE')
@@ -39,15 +39,6 @@ export function createAsyncRoutine (baseName, entities) {
   routine.isInitialized = getOperationFlag(routine.getState, 'initialized')
   routine.isLoading = getOperationFlag(routine.getState, 'loading')
 
-  return routine
-}
-
-export function createView (viewName, { entities, sync = false } = {}) {
-  const routineName = composeActionType(VIEW_PREFIX, viewName)
-  const routine = sync
-    ? createSyncRoutine(routineName, entities)
-    : createAsyncRoutine(routineName, entities)
-  routine.viewName = camelCase(viewName)
   return routine
 }
 

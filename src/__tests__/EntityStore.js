@@ -1,4 +1,4 @@
-import { createEntityStore, createAsyncRoutine } from '..'
+import { EntityConfig, createEntityStore, createAsyncRoutine } from '..'
 
 describe('EntityStore', () => {
   it('provides collection name', () => {
@@ -11,11 +11,11 @@ describe('EntityStore', () => {
 
   it('provides providedBy routines', () => {
     const routine = createAsyncRoutine('TEST')
-    const store = createEntityStore({
+    const store = createEntityStore(new EntityConfig({
       identSource: 'uuid',
       name: 'user',
       providedBy: [routine]
-    })
+    }))
     expect(store).toHaveProperty('config.providedBy', [routine])
   })
 

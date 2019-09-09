@@ -2,7 +2,7 @@ import { createModifyReducer } from './modify'
 import { remove } from './remove'
 import { upsert } from './upsert'
 
-function getActionWithRoutine (routines, action) {
+function isActionInRoutines (routines, action) {
   const routine = routines && routines.some(routine => routine.sync
     ? routine.TRIGGER === action.type
     : routine.SUCCESS === action.type
@@ -19,7 +19,7 @@ function isActionReflected (on, action) {
 
 function isActionRecognized (collection, action) {
   return collection instanceof Array
-    ? getActionWithRoutine(collection, action)
+    ? isActionInRoutines(collection, action)
     : isActionReflected(collection, action)
 }
 

@@ -17,5 +17,3 @@ export const STAGES_ASYNC = [
   STAGE_SUCCESS,
   STAGE_TRIGGER
 ]
-
-export const VIEW_PREFIX = '@VIEW'

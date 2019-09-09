@@ -1,4 +1,4 @@
-import { append, extend, reduceArray, upsert } from './reducers'
+import { append, extend, parseEntityPath, reduceArray, upsert } from './reducers'
 import { Relation } from './Relation'
 
 class BelongsTo extends Relation {
@@ -14,13 +14,13 @@ class BelongsTo extends Relation {
     const attr = this.attr
     return src.config.providedBy.reduce((acc, routine) => ({
       ...acc,
-      [routine.SUCCESS]: reduceArray(function (state, action, config) {
+      [routine.SUCCESS]: parseEntityPath(reduceArray(function (state, action, config) {
         const carrier = action.payload
         const payload = carrier[attr]
         return payload && typeof payload === 'object'
           ? upsert(state, { payload }, config)
           : state
-      })
+      }), src.config)
     }), {})
   }
 

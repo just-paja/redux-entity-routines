@@ -1,4 +1,4 @@
-import { append, extend, filterUnique, getItemIndex, reduceArray, upsert } from './reducers'
+import { append, extend, filterUnique, getItemIndex, parseEntityPath, reduceArray, upsert } from './reducers'
 import { Relation } from './Relation'
 
 class ManyToMany extends Relation {
@@ -12,7 +12,7 @@ class ManyToMany extends Relation {
     }
     return src.config.providedBy.reduce((acc, routine) => ({
       ...acc,
-      [routine.SUCCESS]: reduceArray(function (state, action, config) {
+      [routine.SUCCESS]: parseEntityPath(reduceArray(function (state, action, config) {
         const carrier = action.payload
         const items = carrier[config.name]
         if (!items || items.length === 0) {
@@ -27,7 +27,7 @@ class ManyToMany extends Relation {
           return { ...item, [src.name]: relatedItems }
         })
         return upsert(state, { payload }, config)
-      })
+      }), src.config)
     }), {})
   }
 
