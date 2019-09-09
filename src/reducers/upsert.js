@@ -1,5 +1,6 @@
-import { reduceArray, requireIdent } from './decorators'
 import { getItemIndex } from './identifiers'
+import { getPayloadEntities } from './payloadEntities'
+import { reduceArray, requireIdent } from './decorators'
 
 function processEntity (config, entity) {
   if (config.entityProcessors && config.entityProcessors.length) {
@@ -8,22 +9,16 @@ function processEntity (config, entity) {
   return entity
 }
 
-export function constructItem (config, payload) {
-  const payloadItem = typeof payload === 'string'
-    ? { [config.identAttr]: payload }
-    : payload
-  return { ...config.initialState, ...payloadItem }
-}
-
 export function upsertItem (state, action, config, itemIndex) {
+  const payload = getPayloadEntities(config.name, action)
   if (itemIndex === -1) {
     return [
       ...state,
-      processEntity(config, constructItem(config, action.payload))
+      processEntity(config, config.formatEntity(payload))
     ]
   }
   const nextState = state.slice()
-  nextState[itemIndex] = processEntity(config, action.payload)
+  nextState[itemIndex] = processEntity(config, payload)
   return nextState
 }
 

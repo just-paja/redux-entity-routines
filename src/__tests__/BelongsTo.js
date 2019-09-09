@@ -1,17 +1,21 @@
-import { createEntitiesReducer, createEntityStore, createAsyncRoutine } from '..'
 import { createBelongsTo } from '../BelongsTo'
+import { createEntitiesReducer, createEntityStore, createAsyncRoutine } from '..'
 
-describe('store belongsTo', () => {
+describe('BelongsTo', () => {
   it('does not fail given target name is missing in parent payload', () => {
     const soundsRoutine = createAsyncRoutine('SOUNDS')
     const tagsRoutine = createAsyncRoutine('TAGS')
-    const sounds = createEntityStore('sounds', {
+    const sounds = createEntityStore({
+      identSource: 'uuid',
+      name: 'sounds',
       belongsTo: [
         { collection: 'tags', attr: 'tag' }
       ],
       providedBy: [soundsRoutine]
     })
-    const tags = createEntityStore('tags', {
+    const tags = createEntityStore({
+      identSource: 'uuid',
+      name: 'tags',
       providedBy: [tagsRoutine]
     })
     const reducer = createEntitiesReducer(sounds, tags)
@@ -27,13 +31,17 @@ describe('store belongsTo', () => {
   it('does not fail given parent name is missing in target payload', () => {
     const soundsRoutine = createAsyncRoutine('SOUNDS')
     const tagsRoutine = createAsyncRoutine('TAGS')
-    const sounds = createEntityStore('sounds', {
+    const sounds = createEntityStore({
+      identSource: 'uuid',
+      name: 'sounds',
       belongsTo: [
         { collection: 'tags', attr: 'tag' }
       ],
       providedBy: [soundsRoutine]
     })
-    const tags = createEntityStore('tags', {
+    const tags = createEntityStore({
+      identSource: 'uuid',
+      name: 'tags',
       providedBy: [tagsRoutine]
     })
     const reducer = createEntitiesReducer(sounds, tags)
@@ -49,13 +57,18 @@ describe('store belongsTo', () => {
   it('does not fail given parent has no providers', () => {
     const soundsRoutine = createAsyncRoutine('SOUNDS')
     const tagsRoutine = createAsyncRoutine('TAGS')
-    const sounds = createEntityStore('sounds', {
+    const sounds = createEntityStore({
+      identSource: 'uuid',
+      name: 'sounds',
       belongsTo: [
         { collection: 'tags', attr: 'tag' }
       ],
       providedBy: [soundsRoutine]
     })
-    const tags = createEntityStore('tags')
+    const tags = createEntityStore({
+      identSource: 'uuid',
+      name: 'tags'
+    })
     const reducer = createEntitiesReducer(sounds, tags)
     const payload = [
       {
@@ -68,12 +81,16 @@ describe('store belongsTo', () => {
 
   it('does not fail given target has no providers', () => {
     const tagsRoutine = createAsyncRoutine('TAGS')
-    const sounds = createEntityStore('sounds', {
+    const sounds = createEntityStore({
+      identSource: 'uuid',
+      name: 'sounds',
       belongsTo: [
         { collection: 'tags', attr: 'tag' }
       ]
     })
-    const tags = createEntityStore('tags', {
+    const tags = createEntityStore({
+      identSource: 'uuid',
+      name: 'tags',
       providedBy: [tagsRoutine]
     })
     const reducer = createEntitiesReducer(sounds, tags)
@@ -89,13 +106,17 @@ describe('store belongsTo', () => {
   it('stores parent entities without belongs to attribute from parent payload', () => {
     const soundsRoutine = createAsyncRoutine('SOUNDS')
     const tagsRoutine = createAsyncRoutine('TAGS')
-    const sounds = createEntityStore('sounds', {
+    const sounds = createEntityStore({
+      identSource: 'uuid',
+      name: 'sounds',
       belongsTo: [
         { collection: 'tags', attr: 'tag' }
       ],
       providedBy: [soundsRoutine]
     })
-    const tags = createEntityStore('tags', {
+    const tags = createEntityStore({
+      identSource: 'uuid',
+      name: 'tags',
       providedBy: [tagsRoutine]
     })
     const reducer = createEntitiesReducer(sounds, tags)
@@ -135,13 +156,17 @@ describe('store belongsTo', () => {
   it('creates relation target entities from parent payload', () => {
     const soundsRoutine = createAsyncRoutine('SOUNDS')
     const tagsRoutine = createAsyncRoutine('TAGS')
-    const sounds = createEntityStore('sounds', {
+    const sounds = createEntityStore({
+      identSource: 'uuid',
+      name: 'sounds',
       belongsTo: [
         { collection: 'tags', attr: 'tag' }
       ],
       providedBy: [soundsRoutine]
     })
-    const tags = createEntityStore('tags', {
+    const tags = createEntityStore({
+      identSource: 'uuid',
+      name: 'tags',
       providedBy: [tagsRoutine]
     })
     const reducer = createEntitiesReducer(sounds, tags)
@@ -184,18 +209,25 @@ describe('store belongsTo', () => {
   })
 
   it('converts relationship representation to string in a readable way', () => {
-    const parent = createEntityStore('user', {
+    const parent = createEntityStore({
+      name: 'user',
+      identSource: 'uuid',
       belongsTo: [
         { collection: 'group' }
       ]
     })
-    const target = createEntityStore('group')
+    const target = createEntityStore({
+      name: 'group',
+      identSource: 'uuid'
+    })
     const relations = createBelongsTo([parent, target])
     expect(relations[0] + '').toBe('belongsTo(user:group)')
   })
 
   it('throws exception given target store does not exist', () => {
-    const parent = createEntityStore('user', {
+    const parent = createEntityStore({
+      name: 'user',
+      identSource: 'uuid',
       belongsTo: [
         { collection: 'group' }
       ]

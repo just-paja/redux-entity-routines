@@ -1,3 +1,4 @@
+import { EntityConfig } from '../../EntityConfig'
 import { createModifyReducer } from '..'
 
 describe('modify reducer', () => {
@@ -17,7 +18,7 @@ describe('modify reducer', () => {
       type: 'TEST',
       payload: {}
     }
-    const config = { identAttr: 'uuid' }
+    const config = new EntityConfig({ name: 'sound', identSource: 'uuid' })
     const reducer = createModifyReducer(state => state)
     expect(reducer(state, action, config)).toBe(state)
   })
@@ -37,7 +38,7 @@ describe('modify reducer', () => {
         uuid: 'x9'
       }
     }
-    const config = { identAttr: 'uuid' }
+    const config = new EntityConfig({ name: 'sound', identSource: 'uuid' })
     const reducer = createModifyReducer(jest.fn().mockImplementation(returnPayload))
     expect(reducer(state, action, config)).toEqual([
       { uuid: 'x3', name: 'foo' },
@@ -56,11 +57,11 @@ describe('modify reducer', () => {
         _links: { self: '/users/2' }
       }
     }
-    const config = { identResolver: halLinkResolver }
+    const config = new EntityConfig({ name: 'user', identSource: halLinkResolver })
     const reducer = createModifyReducer(jest.fn().mockImplementation(returnPayload))
     expect(reducer(state, action, config)).toEqual([
-      { name: 'foo', _links: { self: '/users/1' } },
-      { name: 'bar', _links: { self: '/users/2' } }
+      expect.objectContaining({ name: 'foo', _links: { self: '/users/1' } }),
+      expect.objectContaining({ name: 'bar', _links: { self: '/users/2' } })
     ])
   })
 
@@ -75,7 +76,7 @@ describe('modify reducer', () => {
         uuid: 'x3'
       }
     }
-    const config = { identAttr: 'uuid' }
+    const config = new EntityConfig({ name: 'sound', identSource: 'uuid' })
     const reducer = createModifyReducer(jest.fn().mockImplementation(returnPayload))
     expect(reducer(state, action, config)).toEqual([
       { uuid: 'x3', name: 'bar' }
@@ -93,7 +94,7 @@ describe('modify reducer', () => {
         _links: { self: '/users/1' }
       }
     }
-    const config = { identResolver: halLinkResolver }
+    const config = new EntityConfig({ name: 'user', identSource: halLinkResolver })
     const reducer = createModifyReducer(jest.fn().mockImplementation(returnPayload))
     expect(reducer(state, action, config)).toEqual([
       { name: 'bar', _links: { self: '/users/1' } }
@@ -111,7 +112,7 @@ describe('modify reducer', () => {
         { name: 'baz', uuid: 'x7' }
       ]
     }
-    const config = { identAttr: 'uuid' }
+    const config = new EntityConfig({ name: 'sound', identSource: 'uuid' })
     const reducer = createModifyReducer(jest.fn().mockImplementation(returnPayload))
     expect(reducer(state, action, config)).toEqual([
       { uuid: 'x3', name: 'foo' },
@@ -131,7 +132,7 @@ describe('modify reducer', () => {
         { uuid: 'x9', name: 'bar' }
       ]
     }
-    const config = { identAttr: 'uuid' }
+    const config = new EntityConfig({ name: 'sound', identSource: 'uuid' })
     const reducer = createModifyReducer(jest.fn().mockImplementation(returnPayload))
     expect(reducer(state, action, config)).toEqual([
       { uuid: 'x3', name: 'bar' },
@@ -147,7 +148,7 @@ describe('modify reducer', () => {
       type: 'TEST',
       payload: 'x9'
     }
-    const config = { identAttr: 'uuid' }
+    const config = new EntityConfig({ name: 'sound', identSource: 'uuid' })
     const reducer = createModifyReducer(jest.fn().mockImplementation(returnPayload))
     expect(reducer(state, action, config)).toEqual([
       { uuid: 'x3', name: 'foo' },
@@ -155,7 +156,7 @@ describe('modify reducer', () => {
     ])
   })
 
-  it('appends string item to state after modifying  it', () => {
+  it('appends string item to state after modifying it', () => {
     const state = [
       { uuid: 'x3', name: 'foo' }
     ]
@@ -163,7 +164,7 @@ describe('modify reducer', () => {
       type: 'TEST',
       payload: 'x9'
     }
-    const config = { identAttr: 'uuid' }
+    const config = new EntityConfig({ name: 'sound', identSource: 'uuid' })
     const reducer = createModifyReducer(jest.fn().mockImplementation(item => ({
       ...item,
       name: 'bar'

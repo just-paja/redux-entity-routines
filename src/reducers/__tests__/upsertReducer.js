@@ -1,3 +1,4 @@
+import { EntityConfig } from '../../EntityConfig'
 import { upsert } from '..'
 
 describe('upsert reducer', () => {
@@ -13,9 +14,7 @@ describe('upsert reducer', () => {
       type: 'TEST',
       payload: {}
     }
-    const config = {
-      identAttr: 'uuid'
-    }
+    const config = new EntityConfig({ name: 'sound', identSource: 'uuid' })
     expect(upsert(state, action, config)).toBe(state)
   })
 
@@ -30,9 +29,7 @@ describe('upsert reducer', () => {
         uuid: 'x9'
       }
     }
-    const config = {
-      identAttr: 'uuid'
-    }
+    const config = new EntityConfig({ name: 'sound', identSource: 'uuid' })
     expect(upsert(state, action, config)).toEqual([
       { uuid: 'x3', name: 'foo' },
       { uuid: 'x9', name: 'bar' }
@@ -52,12 +49,10 @@ describe('upsert reducer', () => {
         }
       }
     }
-    const config = {
-      identResolver: halLinkResolver
-    }
+    const config = new EntityConfig({ name: 'sound', identSource: halLinkResolver })
     expect(upsert(state, action, config)).toEqual([
-      { name: 'foo', _links: { self: '/users/1' } },
-      { name: 'bar', _links: { self: '/users/2' } }
+      expect.objectContaining({ name: 'foo', _links: { self: '/users/1' } }),
+      expect.objectContaining({ name: 'bar', _links: { self: '/users/2' } })
     ])
   })
 
@@ -72,9 +67,7 @@ describe('upsert reducer', () => {
         uuid: 'x3'
       }
     }
-    const config = {
-      identAttr: 'uuid'
-    }
+    const config = new EntityConfig({ name: 'sound', identSource: 'uuid' })
     expect(upsert(state, action, config)).toEqual([
       { uuid: 'x3', name: 'bar' }
     ])
@@ -91,9 +84,7 @@ describe('upsert reducer', () => {
         _links: { self: '/users/1' }
       }
     }
-    const config = {
-      identResolver: halLinkResolver
-    }
+    const config = new EntityConfig({ name: 'sound', identSource: halLinkResolver })
     expect(upsert(state, action, config)).toEqual([
       { name: 'bar', _links: { self: '/users/1' } }
     ])
@@ -110,9 +101,7 @@ describe('upsert reducer', () => {
         { name: 'baz', uuid: 'x7' }
       ]
     }
-    const config = {
-      identAttr: 'uuid'
-    }
+    const config = new EntityConfig({ name: 'sound', identSource: 'uuid' })
     expect(upsert(state, action, config)).toEqual([
       { uuid: 'x3', name: 'foo' },
       { uuid: 'x9', name: 'bar' },
@@ -131,9 +120,7 @@ describe('upsert reducer', () => {
         { uuid: 'x9', name: 'bar' }
       ]
     }
-    const config = {
-      identAttr: 'uuid'
-    }
+    const config = new EntityConfig({ name: 'sound', identSource: 'uuid' })
     expect(upsert(state, action, config)).toEqual([
       { uuid: 'x3', name: 'bar' },
       { uuid: 'x9', name: 'bar' }
@@ -145,9 +132,7 @@ describe('upsert reducer', () => {
       { uuid: 'x3', name: 'foo' }
     ]
     const action = { type: 'TEST' }
-    const config = {
-      identAttr: 'uuid'
-    }
+    const config = new EntityConfig({ name: 'sound', identSource: 'uuid' })
     expect(upsert(state, action, config)).toBe(state)
   })
 
@@ -156,9 +141,7 @@ describe('upsert reducer', () => {
       { uuid: 'x3', name: 'foo' }
     ]
     const action = { type: 'TEST', payload: 'x4' }
-    const config = {
-      identAttr: 'uuid'
-    }
+    const config = new EntityConfig({ name: 'sound', identSource: 'uuid' })
     expect(upsert(state, action, config)).toContainEqual({
       uuid: 'x4'
     })

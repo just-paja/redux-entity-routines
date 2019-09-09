@@ -1,5 +1,8 @@
+export const ACTION_PATH_SEPARATOR = '/'
+
 export const STORE_ENTITIES = 'entities'
 export const STORE_OPERATIONS = 'operations'
+export const STORE_VIEWS = 'views'
 
 export const STAGE_FAILURE = 'FAILURE'
 export const STAGE_FULFILL = 'FULFILL'
@@ -14,3 +17,5 @@ export const STAGES_ASYNC = [
   STAGE_SUCCESS,
   STAGE_TRIGGER
 ]
+
+export const VIEW_PREFIX = '@VIEW'

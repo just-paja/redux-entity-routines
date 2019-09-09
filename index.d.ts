@@ -77,12 +77,14 @@ export interface IdentResolver<Model> {
   (item: Model): Ident;
 }
 
-export interface StoreConfig<Model> {
+export type IdentSource = string | string[] | IdentResolver<any>;
+
+export interface EntityConfig<Model> {
   clearedBy?: (AsyncRoutine<any, Model>|AsyncRoutine<any, Model[]>)[];
   collectionReducers?: ReducerMap<Model[]>;
   deletedBy?: (AsyncRoutine<any, Model>|AsyncRoutine<any, Model[]>)[];
-  identAttr?: string;
-  identResolver?: IdentResolver<Model>;
+  identSource: IdentSource
+  name: string;
   on?: ReducerMap<Model>;
   providedBy?: (AsyncRoutine<any, Model>|AsyncRoutine<any, Model[]>)[];
 }

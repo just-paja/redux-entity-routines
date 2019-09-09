@@ -1,27 +1,19 @@
 import { createEntityStore, createAsyncRoutine } from '..'
 
-describe('entityStore', () => {
-  it('provides clear routine', () => {
-    const store = createEntityStore('users')
-    store.initialize()
-    expect(store).toHaveProperty('clear')
-  })
-
+describe('EntityStore', () => {
   it('provides collection name', () => {
-    const store = createEntityStore('users')
-    expect(store).toHaveProperty('name', 'users')
-  })
-
-  it('provides custom identAttr', () => {
-    const store = createEntityStore('users', {
-      identAttr: 'name'
+    const store = createEntityStore({
+      identSource: 'uuid',
+      name: 'user'
     })
-    expect(store).toHaveProperty('config.identAttr', 'name')
+    expect(store).toHaveProperty('name', 'user')
   })
 
   it('provides providedBy routines', () => {
     const routine = createAsyncRoutine('TEST')
-    const store = createEntityStore('users', {
+    const store = createEntityStore({
+      identSource: 'uuid',
+      name: 'user',
       providedBy: [routine]
     })
     expect(store).toHaveProperty('config.providedBy', [routine])
@@ -29,8 +21,10 @@ describe('entityStore', () => {
 
   it('provides deletedBy routines', () => {
     const routine = createAsyncRoutine('TEST')
-    const store = createEntityStore('users', {
-      deletedBy: [routine]
+    const store = createEntityStore({
+      identSource: 'uuid',
+      deletedBy: [routine],
+      name: 'user'
     })
     expect(store).toHaveProperty('config.deletedBy', [routine])
   })
@@ -38,10 +32,12 @@ describe('entityStore', () => {
   it('provides collectionReducers', () => {
     const routine = createAsyncRoutine('TEST')
     const reducer = state => state
-    const store = createEntityStore('users', {
+    const store = createEntityStore({
+      identSource: 'uuid',
       collectionReducers: {
         [routine.SUCCESS]: reducer
-      }
+      },
+      name: 'user'
     })
     expect(store).toHaveProperty('config.collectionReducers', {
       [routine.SUCCESS]: reducer
@@ -51,10 +47,12 @@ describe('entityStore', () => {
   it('provides on reducers', () => {
     const routine = createAsyncRoutine('TEST')
     const reducer = state => state
-    const store = createEntityStore('users', {
+    const store = createEntityStore({
+      identSource: 'uuid',
       on: {
         [routine.SUCCESS]: reducer
-      }
+      },
+      name: 'user'
     })
     expect(store).toHaveProperty('config.on', {
       [routine.SUCCESS]: reducer
@@ -62,10 +60,13 @@ describe('entityStore', () => {
   })
 
   it('getAll selector returns all entities', () => {
-    const store = createEntityStore('users')
+    const store = createEntityStore({
+      identSource: 'uuid',
+      name: 'user'
+    })
     const state = {
       entities: {
-        users: [
+        user: [
           { uuid: '1' },
           { uuid: '2' }
         ]
@@ -78,10 +79,13 @@ describe('entityStore', () => {
   })
 
   it('getObject selector returns entity matching identAttr given it exists', () => {
-    const store = createEntityStore('users')
+    const store = createEntityStore({
+      identSource: 'uuid',
+      name: 'user'
+    })
     const state = {
       entities: {
-        users: [
+        user: [
           { uuid: '1', name: 'foo' },
           { uuid: '2', name: 'bar' }
         ]
@@ -91,10 +95,13 @@ describe('entityStore', () => {
   })
 
   it('getObject selector returns null given entity matching identAttr does not exist', () => {
-    const store = createEntityStore('users')
+    const store = createEntityStore({
+      identSource: 'uuid',
+      name: 'user'
+    })
     const state = {
       entities: {
-        users: [
+        user: [
           { uuid: '1', name: 'foo' },
           { uuid: '2', name: 'bar' }
         ]
@@ -104,10 +111,13 @@ describe('entityStore', () => {
   })
 
   it('getFlag selector returns true given entity matching identAttr exists and is truthy', () => {
-    const store = createEntityStore('users')
+    const store = createEntityStore({
+      identSource: 'uuid',
+      name: 'user'
+    })
     const state = {
       entities: {
-        users: [
+        user: [
           { uuid: '1', name: 'foo', active: false },
           { uuid: '2', name: 'bar', active: true }
         ]
@@ -117,10 +127,13 @@ describe('entityStore', () => {
   })
 
   it('getFlag selector returns false given entity matching identAttr exists and is falsy', () => {
-    const store = createEntityStore('users')
+    const store = createEntityStore({
+      identSource: 'uuid',
+      name: 'user'
+    })
     const state = {
       entities: {
-        users: [
+        user: [
           { uuid: '1', name: 'foo', active: false },
           { uuid: '2', name: 'bar', active: false }
         ]
@@ -130,10 +143,13 @@ describe('entityStore', () => {
   })
 
   it('getFlag selector returns false given entity matching identAttr does not exist', () => {
-    const store = createEntityStore('users')
+    const store = createEntityStore({
+      identSource: 'uuid',
+      name: 'user'
+    })
     const state = {
       entities: {
-        users: [
+        user: [
           { uuid: '1', name: 'foo', active: false },
           { uuid: '2', name: 'bar', active: true }
         ]
@@ -143,10 +159,13 @@ describe('entityStore', () => {
   })
 
   it('getProp selector returns prop value given entity matching identAttr exists', () => {
-    const store = createEntityStore('users')
+    const store = createEntityStore({
+      identSource: 'uuid',
+      name: 'user'
+    })
     const state = {
       entities: {
-        users: [
+        user: [
           { uuid: '1', name: 'foo', active: false },
           { uuid: '2', name: 'bar', active: true }
         ]
@@ -156,10 +175,13 @@ describe('entityStore', () => {
   })
 
   it('getProp selector returns null given entity matching identAttr does not exist', () => {
-    const store = createEntityStore('users')
+    const store = createEntityStore({
+      identSource: 'uuid',
+      name: 'user'
+    })
     const state = {
       entities: {
-        users: [
+        user: [
           { uuid: '1', name: 'foo', active: false },
           { uuid: '2', name: 'bar', active: true }
         ]
@@ -169,10 +191,13 @@ describe('entityStore', () => {
   })
 
   it('getSize selector returns entity count', () => {
-    const store = createEntityStore('users')
+    const store = createEntityStore({
+      identSource: 'uuid',
+      name: 'user'
+    })
     const state = {
       entities: {
-        users: [
+        user: [
           { uuid: '1', name: 'foo', active: false },
           { uuid: '2', name: 'bar', active: true }
         ]
@@ -182,25 +207,96 @@ describe('entityStore', () => {
   })
 
   it('isEmpty selector returns true given entity count is zero', () => {
-    const store = createEntityStore('users')
+    const store = createEntityStore({
+      identSource: 'uuid',
+      name: 'user'
+    })
     const state = {
       entities: {
-        users: []
+        user: []
       }
     }
     expect(store.isEmpty(state)).toBe(true)
   })
 
   it('isEmpty selector returns false given entity count one', () => {
-    const store = createEntityStore('users')
+    const store = createEntityStore({
+      identSource: 'uuid',
+      name: 'user'
+    })
     const state = {
       entities: {
-        users: [
+        user: [
           { uuid: '1', name: 'foo', active: false },
           { uuid: '2', name: 'bar', active: true }
         ]
       }
     }
     expect(store.isEmpty(state)).toBe(false)
+  })
+
+  it('store converts to readable string', () => {
+    const store = createEntityStore({
+      identSource: 'id',
+      name: 'user'
+    })
+    expect(store + '').toEqual('EntityStore(user)')
+  })
+
+  it('createFindSelector returns item via ident selector', () => {
+    const store = createEntityStore({
+      identSource: 'id',
+      name: 'user'
+    })
+    const state = {
+      entities: {
+        user: [
+          { id: 1, name: 'foo' },
+          { id: 2, name: 'bar' }
+        ]
+      },
+      selectedUser: 2
+    }
+    const idSelector = state => state.selectedUser
+    const selector = store.createFindSelector(idSelector)
+    expect(selector(state)).toEqual({ id: 2, name: 'bar' })
+  })
+
+  it('createFindSelector returns null given item ident does not exist', () => {
+    const store = createEntityStore({
+      identSource: 'id',
+      name: 'user'
+    })
+    const state = {
+      entities: {
+        user: [
+          { id: 1, name: 'foo' },
+          { id: 2, name: 'bar' }
+        ]
+      },
+      selectedUser: 3
+    }
+    const idSelector = state => state.selectedUser
+    const selector = store.createFindSelector(idSelector)
+    expect(selector(state)).toEqual(null)
+  })
+
+  it('createFindSelector returns null given item ident is null', () => {
+    const store = createEntityStore({
+      identSource: 'id',
+      name: 'user'
+    })
+    const state = {
+      entities: {
+        user: [
+          { id: 1, name: 'foo' },
+          { id: 2, name: 'bar' }
+        ]
+      },
+      selectedUser: null
+    }
+    const idSelector = state => state.selectedUser
+    const selector = store.createFindSelector(idSelector)
+    expect(selector(state)).toEqual(null)
   })
 })

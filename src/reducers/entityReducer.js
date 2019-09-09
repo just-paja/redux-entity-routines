@@ -2,11 +2,15 @@ import { createModifyReducer } from './modify'
 import { remove } from './remove'
 import { upsert } from './upsert'
 
-function isActionInRoutines (routines, action) {
-  return routines && routines.some(routine => routine.sync
+function getActionWithRoutine (routines, action) {
+  const routine = routines && routines.some(routine => routine.sync
     ? routine.TRIGGER === action.type
     : routine.SUCCESS === action.type
   )
+  if (routine) {
+    return { ...action, routine }
+  }
+  return null
 }
 
 function isActionReflected (on, action) {
@@ -15,7 +19,7 @@ function isActionReflected (on, action) {
 
 function isActionRecognized (collection, action) {
   return collection instanceof Array
-    ? isActionInRoutines(collection, action)
+    ? getActionWithRoutine(collection, action)
     : isActionReflected(collection, action)
 }
 
@@ -35,27 +39,20 @@ function getModifyReducers (reducers) {
     : null
 }
 
-export function createEntityReducer ({
-  clearedBy,
-  deletedBy,
-  on,
-  collectionReducers,
-  providedBy,
-  ...reducerOptions
-}) {
-  const itemReducers = getModifyReducers(on)
+export function createEntityReducer (config) {
+  const itemReducers = getModifyReducers(config.on)
   function getReducerSequence (action) {
     return [
-      isActionRecognized(clearedBy, action) && empty,
-      isActionRecognized(collectionReducers, action) && collectionReducers[action.type],
-      isActionRecognized(providedBy, action) && upsert,
+      isActionRecognized(config.clearedBy, action) && empty,
+      isActionRecognized(config.collectionReducers, action) && config.collectionReducers[action.type],
+      isActionRecognized(config.providedBy, action) && upsert,
       isActionRecognized(itemReducers, action) && itemReducers[action.type],
-      isActionRecognized(deletedBy, action) && remove
+      isActionRecognized(config.deletedBy, action) && remove
     ].filter(item => item)
   }
   return function entityReducer (state = [], action) {
     return getReducerSequence(action).reduce(
-      (acc, reducer) => reducer(acc, action, reducerOptions),
+      (acc, reducer) => reducer(acc, action, config),
       state
     )
   }

@@ -1,8 +1,8 @@
-import { getIdentifier, reduceArray, upsert } from './reducers'
+import { append, extend, reduceArray, upsert } from './reducers'
 import { Relation } from './Relation'
 
 class BelongsTo extends Relation {
-  get name () {
+  get relationName () {
     return `belongsTo(${this.connection})`
   }
 
@@ -30,16 +30,16 @@ class BelongsTo extends Relation {
       const target = item[attr]
       return {
         ...item,
-        [attr]: target instanceof Object ? getIdentifier(target, relatedStore.config) : target
+        [attr]: target instanceof Object ? relatedStore.config.getIdentifier(target) : target
       }
     }
   }
 
   configureStores () {
     if (this.parent.config.providedBy) {
-      this.target.extend('collectionReducers', this.createUpsertReducers(this.parent))
+      extend(this.target.config, 'collectionReducers', this.createUpsertReducers(this.parent))
     }
-    this.parent.append('entityProcessors', this.createEntityProcessor(this.target))
+    append(this.parent.config, 'entityProcessors', this.createEntityProcessor(this.target))
   }
 }
 

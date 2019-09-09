@@ -1,4 +1,6 @@
-import { createEntityReducer, createAsyncRoutine } from '..'
+import { EntityConfig } from '../../EntityConfig'
+import { createAsyncRoutine } from '../../routines'
+import { createEntityReducer } from '..'
 
 describe('entity reducer', () => {
   function returnPayload (state, action) {
@@ -7,7 +9,10 @@ describe('entity reducer', () => {
 
   it('returns previous state given action is not recognized', () => {
     const routine = createAsyncRoutine('TEST')
-    const reducer = createEntityReducer({})
+    const reducer = createEntityReducer(new EntityConfig({
+      identSource: 'uuid',
+      name: 'sound'
+    }))
     const state = [
       { uuid: 'x3', name: 'foo' }
     ]
@@ -16,9 +21,11 @@ describe('entity reducer', () => {
 
   it('returns empty array given action success is in clearedBy routines', () => {
     const routine = createAsyncRoutine('TEST')
-    const reducer = createEntityReducer({
-      clearedBy: [routine]
-    })
+    const reducer = createEntityReducer(new EntityConfig({
+      clearedBy: [routine],
+      identSource: 'uuid',
+      name: 'sound'
+    }))
     const state = [
       { uuid: 'x3', name: 'foo' }
     ]
@@ -27,9 +34,11 @@ describe('entity reducer', () => {
 
   it('deletes item given payload string item exists', () => {
     const routine = createAsyncRoutine('TEST')
-    const reducer = createEntityReducer({
-      deletedBy: [routine]
-    })
+    const reducer = createEntityReducer(new EntityConfig({
+      deletedBy: [routine],
+      identSource: 'uuid',
+      name: 'sound'
+    }))
     const state = [
       { uuid: 'x3', name: 'foo' },
       { uuid: 'x9', name: 'baz' }
@@ -41,11 +50,13 @@ describe('entity reducer', () => {
 
   it('modifies collection when it receives collection reducer action', () => {
     const routine = createAsyncRoutine('TEST')
-    const reducer = createEntityReducer({
+    const reducer = createEntityReducer(new EntityConfig({
+      name: 'sound',
+      identSource: 'uuid',
       collectionReducers: {
         [routine.SUCCESS]: jest.fn().mockImplementation(returnPayload)
       }
-    })
+    }))
     const state = [
       { uuid: 'x3', name: 'foo', description: 'xxx' }
     ]
@@ -56,11 +67,13 @@ describe('entity reducer', () => {
 
   it('modifies item when it receives "on" action', () => {
     const routine = createAsyncRoutine('TEST')
-    const reducer = createEntityReducer({
+    const reducer = createEntityReducer(new EntityConfig({
+      name: 'sound',
+      identSource: 'uuid',
       on: {
         [routine.SUCCESS]: jest.fn().mockImplementation(returnPayload)
       }
-    })
+    }))
     const state = [
       { uuid: 'x3' }
     ]

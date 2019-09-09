@@ -1,5 +1,5 @@
 export * from './actions'
-export * from './reducers'
+export * from './EntityConfig'
+export * from './EntityStore'
 export * from './routines'
-export * from './store'
 export * from './storeConnector'

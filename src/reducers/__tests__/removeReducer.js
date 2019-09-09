@@ -1,3 +1,4 @@
+import { EntityConfig } from '../../EntityConfig'
 import { remove } from '..'
 
 describe('remove reducer', () => {
@@ -9,9 +10,7 @@ describe('remove reducer', () => {
       type: 'TEST',
       payload: {}
     }
-    const config = {
-      identAttr: 'uuid'
-    }
+    const config = new EntityConfig({ name: 'sound', identSource: 'uuid' })
     expect(remove(state, action, config)).toBe(state)
   })
 
@@ -23,9 +22,7 @@ describe('remove reducer', () => {
       type: 'TEST',
       payload: 'x9'
     }
-    const config = {
-      identAttr: 'uuid'
-    }
+    const config = new EntityConfig({ name: 'sound', identSource: 'uuid' })
     expect(remove(state, action, config)).toBe(state)
   })
 
@@ -37,9 +34,7 @@ describe('remove reducer', () => {
       type: 'TEST',
       payload: { uuid: 'x9' }
     }
-    const config = {
-      identAttr: 'uuid'
-    }
+    const config = new EntityConfig({ name: 'sound', identSource: 'uuid' })
     expect(remove(state, action, config)).toBe(state)
   })
 
@@ -52,9 +47,7 @@ describe('remove reducer', () => {
       type: 'TEST',
       payload: 'x9'
     }
-    const config = {
-      identAttr: 'uuid'
-    }
+    const config = new EntityConfig({ name: 'sound', identSource: 'uuid' })
     expect(remove(state, action, config)).toEqual([{ uuid: 'x3' }])
   })
 
@@ -67,9 +60,7 @@ describe('remove reducer', () => {
       type: 'TEST',
       payload: { uuid: 'x9' }
     }
-    const config = {
-      identAttr: 'uuid'
-    }
+    const config = new EntityConfig({ name: 'sound', identSource: 'uuid' })
     expect(remove(state, action, config)).toEqual([{ uuid: 'x3' }])
   })
 })

@@ -50,7 +50,7 @@ const operationMap = {
   [STAGE_SUCCESS]: initialize
 }
 
-function requireStage (reducer) {
+export function requireStage (reducer) {
   return function (state = {}, action) {
     const stage = action.type && getStage(action.type)
     return stage ? reducer(state, action, stage) : state

@@ -1,15 +1,19 @@
 import { createEntitiesReducer, createEntityStore, createAsyncRoutine } from '..'
 import { createManyToMany } from '../ManyToMany'
 
-describe('store manyToMany', () => {
+describe('ManyToMany', () => {
   it('does not fail given target name is missing in parent payload', () => {
     const soundsRoutine = createAsyncRoutine('SOUNDS')
     const tagsRoutine = createAsyncRoutine('TAGS')
-    const sounds = createEntityStore('sounds', {
+    const sounds = createEntityStore({
+      name: 'sounds',
+      identSource: 'uuid',
       hasManyToMany: ['tags'],
       providedBy: [soundsRoutine]
     })
-    const tags = createEntityStore('tags', {
+    const tags = createEntityStore({
+      name: 'tags',
+      identSource: 'uuid',
       providedBy: [tagsRoutine]
     })
     const reducer = createEntitiesReducer(sounds, tags)
@@ -25,11 +29,15 @@ describe('store manyToMany', () => {
   it('does not fail given parent name is missing in target payload', () => {
     const soundsRoutine = createAsyncRoutine('SOUNDS')
     const tagsRoutine = createAsyncRoutine('TAGS')
-    const sounds = createEntityStore('sounds', {
+    const sounds = createEntityStore({
+      name: 'sounds',
+      identSource: 'uuid',
       hasManyToMany: ['tags'],
       providedBy: [soundsRoutine]
     })
-    const tags = createEntityStore('tags', {
+    const tags = createEntityStore({
+      name: 'tags',
+      identSource: 'uuid',
       providedBy: [tagsRoutine]
     })
     const reducer = createEntitiesReducer(sounds, tags)
@@ -45,11 +53,15 @@ describe('store manyToMany', () => {
   it('stores parent entities without manyToMany attribute from parent payload', () => {
     const soundsRoutine = createAsyncRoutine('SOUNDS')
     const tagsRoutine = createAsyncRoutine('TAGS')
-    const sounds = createEntityStore('sounds', {
+    const sounds = createEntityStore({
+      name: 'sounds',
+      identSource: 'uuid',
       hasManyToMany: ['tags'],
       providedBy: [soundsRoutine]
     })
-    const tags = createEntityStore('tags', {
+    const tags = createEntityStore({
+      name: 'tags',
+      identSource: 'uuid',
       providedBy: [tagsRoutine]
     })
     const reducer = createEntitiesReducer(sounds, tags)
@@ -88,11 +100,15 @@ describe('store manyToMany', () => {
   it('creates relation target entities from parent payload', () => {
     const soundsRoutine = createAsyncRoutine('SOUNDS')
     const tagsRoutine = createAsyncRoutine('TAGS')
-    const sounds = createEntityStore('sounds', {
+    const sounds = createEntityStore({
+      name: 'sounds',
+      identSource: 'uuid',
       hasManyToMany: ['tags'],
       providedBy: [soundsRoutine]
     })
-    const tags = createEntityStore('tags', {
+    const tags = createEntityStore({
+      name: 'tags',
+      identSource: 'uuid',
       providedBy: [tagsRoutine]
     })
     const reducer = createEntitiesReducer(sounds, tags)
@@ -139,11 +155,15 @@ describe('store manyToMany', () => {
   it('creates relation parent entities from target payload', () => {
     const soundsRoutine = createAsyncRoutine('SOUNDS')
     const tagsRoutine = createAsyncRoutine('TAGS')
-    const sounds = createEntityStore('sounds', {
+    const sounds = createEntityStore({
+      name: 'sounds',
+      identSource: 'uuid',
       hasManyToMany: ['tags'],
       providedBy: [soundsRoutine]
     })
-    const tags = createEntityStore('tags', {
+    const tags = createEntityStore({
+      name: 'tags',
+      identSource: 'uuid',
       providedBy: [tagsRoutine]
     })
     const reducer = createEntitiesReducer(sounds, tags)
@@ -173,7 +193,8 @@ describe('store manyToMany', () => {
         ]
       }
     ]
-    expect(reducer(undefined, tagsRoutine.success(payload))).toHaveProperty('sounds', [
+    const result = reducer(undefined, tagsRoutine.success(payload))
+    expect(result).toHaveProperty('sounds', [
       { uuid: '3', name: 'sound-1', tags: ['5', '7'] },
       { uuid: '4', name: 'sound-2', tags: ['7'] }
     ])
@@ -182,11 +203,15 @@ describe('store manyToMany', () => {
   it('creates relation target entities from target payload', () => {
     const soundsRoutine = createAsyncRoutine('SOUNDS')
     const tagsRoutine = createAsyncRoutine('TAGS')
-    const sounds = createEntityStore('sounds', {
+    const sounds = createEntityStore({
+      name: 'sounds',
+      identSource: 'uuid',
       hasManyToMany: ['tags'],
       providedBy: [soundsRoutine]
     })
-    const tags = createEntityStore('tags', {
+    const tags = createEntityStore({
+      name: 'tags',
+      identSource: 'uuid',
       providedBy: [tagsRoutine]
     })
     const reducer = createEntitiesReducer(sounds, tags)
@@ -225,11 +250,15 @@ describe('store manyToMany', () => {
   it('getObject returns item with mapped manyToMany relation from parent store', () => {
     const soundsRoutine = createAsyncRoutine('SOUNDS')
     const tagsRoutine = createAsyncRoutine('TAGS')
-    const sounds = createEntityStore('sounds', {
+    const sounds = createEntityStore({
+      name: 'sounds',
+      identSource: 'uuid',
       hasManyToMany: ['tags'],
       providedBy: [soundsRoutine]
     })
-    const tags = createEntityStore('tags', {
+    const tags = createEntityStore({
+      name: 'tags',
+      identSource: 'uuid',
       providedBy: [tagsRoutine]
     })
     createEntitiesReducer(sounds, tags)
@@ -267,11 +296,15 @@ describe('store manyToMany', () => {
   it('getAll returns item with mapped manyToMany relation from parent store', () => {
     const soundsRoutine = createAsyncRoutine('SOUNDS')
     const tagsRoutine = createAsyncRoutine('TAGS')
-    const sounds = createEntityStore('sounds', {
+    const sounds = createEntityStore({
+      name: 'sounds',
+      identSource: 'uuid',
       hasManyToMany: ['tags'],
       providedBy: [soundsRoutine]
     })
-    const tags = createEntityStore('tags', {
+    const tags = createEntityStore({
+      name: 'tags',
+      identSource: 'uuid',
       providedBy: [tagsRoutine]
     })
     createEntitiesReducer(sounds, tags)
@@ -318,11 +351,15 @@ describe('store manyToMany', () => {
   it('processes large amount of data', () => {
     const soundsRoutine = createAsyncRoutine('SOUNDS')
     const tagsRoutine = createAsyncRoutine('TAGS')
-    const sounds = createEntityStore('sounds', {
+    const sounds = createEntityStore({
+      name: 'sounds',
+      identSource: 'uuid',
       hasManyToMany: ['tags'],
       providedBy: [soundsRoutine]
     })
-    const tags = createEntityStore('tags', {
+    const tags = createEntityStore({
+      name: 'tags',
+      identSource: 'uuid',
       providedBy: [tagsRoutine]
     })
     const reducer = createEntitiesReducer(sounds, tags)
@@ -354,16 +391,23 @@ describe('store manyToMany', () => {
   })
 
   it('converts relationship representation to string in a readable way', () => {
-    const parent = createEntityStore('user', {
+    const parent = createEntityStore({
+      name: 'user',
+      identSource: 'uuid',
       hasManyToMany: ['group']
     })
-    const target = createEntityStore('group')
+    const target = createEntityStore({
+      name: 'group',
+      identSource: 'uuid'
+    })
     const relations = createManyToMany([parent, target])
     expect(relations[0] + '').toBe('manyToMany(user:group)')
   })
 
   it('throws exception given target store does not exist', () => {
-    const parent = createEntityStore('user', {
+    const parent = createEntityStore({
+      name: 'user',
+      identSource: 'uuid',
       hasManyToMany: ['group']
     })
     expect(() => {
@@ -373,20 +417,29 @@ describe('store manyToMany', () => {
 
   it('does not fail given target has no providers', () => {
     const soundsRoutine = createAsyncRoutine('SOUNDS')
-    const sounds = createEntityStore('sounds', {
+    const sounds = createEntityStore({
+      name: 'sounds',
+      identSource: 'uuid',
       hasManyToMany: ['tags'],
       providedBy: [soundsRoutine]
     })
-    const tags = createEntityStore('tags', {})
+    const tags = createEntityStore({
+      name: 'tags',
+      identSource: 'uuid'
+    })
     expect(() => createEntitiesReducer(sounds, tags)).not.toThrow()
   })
 
   it('does not fail given parent has no providers', () => {
     const tagRoutine = createAsyncRoutine('TAGS')
-    const sounds = createEntityStore('sounds', {
+    const sounds = createEntityStore({
+      name: 'sounds',
+      identSource: 'uuid',
       hasManyToMany: ['tags']
     })
-    const tags = createEntityStore('tags', {
+    const tags = createEntityStore({
+      name: 'tags',
+      identSource: 'uuid',
       providedBy: [tagRoutine]
     })
     expect(() => createEntitiesReducer(sounds, tags)).not.toThrow()

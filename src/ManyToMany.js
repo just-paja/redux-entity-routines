@@ -1,8 +1,8 @@
-import { getIdentifier, filterUnique, getItemIndex, reduceArray, upsert } from './reducers'
+import { append, extend, filterUnique, getItemIndex, reduceArray, upsert } from './reducers'
 import { Relation } from './Relation'
 
 class ManyToMany extends Relation {
-  get name () {
+  get relationName () {
     return `manyToMany(${this.connection})`
   }
 
@@ -18,9 +18,9 @@ class ManyToMany extends Relation {
         if (!items || items.length === 0) {
           return state
         }
-        const ident = getIdentifier(carrier, src.config)
+        const ident = src.config.getIdentifier(carrier)
         const payload = items.map((item) => {
-          const itemIndex = getItemIndex(state, config, getIdentifier(item, config))
+          const itemIndex = getItemIndex(state, config, config.getIdentifier(item))
           const relatedItems = itemIndex === -1
             ? [ident]
             : state[itemIndex][src.name].concat([ident])
@@ -38,7 +38,7 @@ class ManyToMany extends Relation {
         ...item,
         [relatedStore.name]: targets
           ? targets
-            .map((item) => item instanceof Object ? getIdentifier(item, relatedStore.config) : item)
+            .map((item) => item instanceof Object ? relatedStore.config.getIdentifier(item) : item)
             .filter(filterUnique)
           : []
       }
@@ -46,10 +46,10 @@ class ManyToMany extends Relation {
   }
 
   configureStores () {
-    this.parent.extend('collectionReducers', this.createUpsertReducers(this.target))
-    this.target.extend('collectionReducers', this.createUpsertReducers(this.parent))
-    this.parent.append('entityProcessors', this.createEntityProcessor(this.target))
-    this.target.append('entityProcessors', this.createEntityProcessor(this.parent))
+    extend(this.parent.config, 'collectionReducers', this.createUpsertReducers(this.target))
+    extend(this.target.config, 'collectionReducers', this.createUpsertReducers(this.parent))
+    append(this.parent.config, 'entityProcessors', this.createEntityProcessor(this.target))
+    append(this.target.config, 'entityProcessors', this.createEntityProcessor(this.parent))
   }
 }
 

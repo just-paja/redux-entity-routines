@@ -1,11 +1,12 @@
-import { getIdentifier } from './identifiers'
+import { getPayloadEntities } from './payloadEntities'
 
 export function reduceArray (reducer) {
   return function (state, action, config) {
-    if (action.payload instanceof Array) {
-      return action.payload.reduce(
+    const payload = getPayloadEntities(config.name, action)
+    if (payload instanceof Array) {
+      return payload.reduce(
         function (acc, payload) {
-          return reducer(acc, { payload }, config)
+          return reducer(acc, { ...action, payload }, config)
         },
         state
       )
@@ -16,7 +17,8 @@ export function reduceArray (reducer) {
 
 export function requireIdent (reducer) {
   return function (state, action, config) {
-    const ident = getIdentifier(action.payload, config)
+    const payload = getPayloadEntities(config.name, action)
+    const ident = config.getIdentifier(payload)
     return ident
       ? reducer(state, action, config, ident)
       : state

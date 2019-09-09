@@ -1,12 +1,12 @@
 import { Configurable } from './Configurable'
 
 export class Relation extends Configurable {
-  get connection () {
-    return `${this.parent.name}:${this.target.name}`
+  constructor (config) {
+    super('[Relation]', config)
   }
 
-  get name () {
-    return `relation(${this.connection})`
+  get connection () {
+    return `${this.parent.name}:${this.target.name}`
   }
 
   get parent () {
@@ -17,7 +17,11 @@ export class Relation extends Configurable {
     return this.config.target
   }
 
+  get relationName () {
+    return `relation(${this.connection})`
+  }
+
   toString () {
-    return this.name
+    return this.relationName
   }
 }
