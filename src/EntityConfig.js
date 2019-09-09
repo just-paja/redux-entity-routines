@@ -39,7 +39,8 @@ export class EntityConfig extends NamedObject {
     identSource,
     name,
     on,
-    providedBy
+    providedBy,
+    views
   }) {
     super(name)
     this.configureFormatter(identSource)
@@ -47,6 +48,7 @@ export class EntityConfig extends NamedObject {
     this.configureRelations(belongsTo, hasManyToMany)
     this.configureRoutines(clearedBy, deletedBy, providedBy)
     this.configureResolver(identSource)
+    this.configureViews(views)
   }
 
   configureReducers (clearedBy, collectionReducers, deletedBy, entityProcessors, on, providedBy) {
@@ -82,6 +84,10 @@ export class EntityConfig extends NamedObject {
     } else {
       throw new Error(`Unsupported identifier type: "${typeof identSource}"`)
     }
+  }
+
+  configureViews (views) {
+    this.views = views
   }
 
   configureFormatter (identSource) {

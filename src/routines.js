@@ -14,6 +14,7 @@ export function createSyncRoutine (baseName, entityConfig) {
   const routine = createRoutine(baseName, entityConfig)
   routine.trigger = routine
   routine.TRIGGER = baseName
+  routine.SUCCESS = baseName
   routine.sync = true
   return routine
 }

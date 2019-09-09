@@ -3,14 +3,9 @@ import { remove } from './remove'
 import { upsert } from './upsert'
 
 function isActionInRoutines (routines, action) {
-  const routine = routines && routines.some(routine => routine.sync
-    ? routine.TRIGGER === action.type
-    : routine.SUCCESS === action.type
+  return routines && routines.some(
+    routine => routine.SUCCESS === action.type
   )
-  if (routine) {
-    return { ...action, routine }
-  }
-  return null
 }
 
 function isActionReflected (on, action) {

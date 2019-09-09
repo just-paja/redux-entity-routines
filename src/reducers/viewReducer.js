@@ -1,47 +1,47 @@
-import { ACTION_PATH_SEPARATOR, STAGE_SUCCESS, VIEW_PREFIX } from '../constants'
-import { requireStage } from './operationReducer'
+import { combineReducers } from 'redux'
 
-import camelCase from 'camelcase'
+import jp from 'jsonpath'
 
-const initialState = {}
-
-function getViewName (action) {
-  if (action.type.indexOf(VIEW_PREFIX) === 0) {
-    const actionPath = action.type.substr(VIEW_PREFIX.length + 1).split(ACTION_PATH_SEPARATOR)
-    return actionPath[0] ? camelCase(actionPath[0]) : null
-  }
-  return null
+const viewInitialState = {
+  entities: [],
+  props: {}
 }
 
-function requireSuccess (reducer) {
-  return function (state = initialState, action, stage) {
-    return stage === STAGE_SUCCESS ? reducer(state, action) : state
-  }
+function getIdents (config, payload) {
+  const payloadArray = payload instanceof Array ? payload : [payload]
+  return payloadArray.map(item => config.getIdentifier(item))
 }
 
-function requireViewName (reducer) {
-  return function (state = initialState, action) {
-    const viewName = getViewName(action)
-    return viewName ? reducer(state, action, viewName) : state
-  }
-}
-
-export const views = requireStage(requireSuccess(requireViewName(function (state = initialState, action, viewName) {
-  return {
-    ...state,
-    [viewName]: {
-      entities: []
+function createViewReducer (store, viewConfig) {
+  return function (state = viewInitialState, action) {
+    if (action.type !== viewConfig.routine.SUCCESS) {
+      return state
+    }
+    const path = store.config.getRoutineEntityPath(action)
+    const entities = getIdents(store.config, jp.value(action.payload, path))
+    return {
+      entities,
+      props: viewConfig.props
+        ? Object.keys(viewConfig.props).reduce((acc, key) => ({
+          ...acc,
+          [key]: jp.value(action.payload, viewConfig.props[key])
+        }), {})
+        : null
     }
   }
-})))
+}
 
-// function createViewReducer (mountPoint, ...stores) {
-//   return combineReducers(createViews(stores).reduce((acc, reducer) => ({
-//     ...acc,
-//     [reducer.name]: reducer
-//   })))
-// }
+function createViewReducers (store) {
+  return store.config.views.reduce((acc, viewConfig) => ({
+    ...acc,
+    [viewConfig.name]: createViewReducer(store, viewConfig)
+  }), {})
+}
 
 export function createViewsReducer (mountPoint, ...stores) {
-  return state => state
+  return combineReducers(
+    stores
+      .filter(store => store.config.views)
+      .reduce((acc, store) => ({ ...acc, ...createViewReducers(store) }), {})
+  )
 }
