@@ -25,9 +25,13 @@ export function createEntitiesReducer (...stores) {
 }
 
 export function connectReducers (mountPoint, ...stores) {
-  return {
+  const reducers = {
     [STORE_ENTITIES]: connectEntitiesReducers(mountPoint, ...stores),
     [STORE_OPERATIONS]: operations,
-    [STORE_VIEWS]: createViewsReducer(mountPoint, ...stores)
   }
+  const viewReducer = createViewsReducer(mountPoint, ...stores)
+  if (viewReducer) {
+    reducers[STORE_VIEWS] = viewReducer
+  }
+  return reducers
 }

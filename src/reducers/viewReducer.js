@@ -39,9 +39,11 @@ function createViewReducers (store) {
 }
 
 export function createViewsReducer (mountPoint, ...stores) {
-  return combineReducers(
-    stores
-      .filter(store => store.config.views)
-      .reduce((acc, store) => ({ ...acc, ...createViewReducers(store) }), {})
-  )
+  const viewReducers = stores
+    .filter(store => store.config.views)
+    .reduce((acc, store) => ({ ...acc, ...createViewReducers(store) }), {})
+
+  return Object.keys(viewReducers).length > 0
+    ? combineReducers(viewReducers)
+    : null
 }
