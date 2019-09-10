@@ -43,7 +43,7 @@ Entity store requires single value unique identifier for all entities. You can e
 
 ```javascript
 const userStore = createEntityStore('users', {
-  identAttr: 'id'
+  identSource: 'id'
   providedBy: [userRoutines.loadAll],
 })
 
@@ -58,7 +58,7 @@ If you use HATEOAS based communication, you can simply leverage [hateoas-hal-lin
 import { resolve } from 'hateoas-hal-link-resolver'
 
 const userStore = createEntityStore('users', {
-  identResolver: resolve
+  identSource: resolve
   providedBy: [userRoutines.loadAll],
 })
 

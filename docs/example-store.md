@@ -15,7 +15,7 @@ const soundRoutines = createEntityRoutines('SOUND', [
 
 // 2. Create store and bind routines
 export const soundStore = createEntityStore('sounds', {
-  identAttr: 'uuid',
+  identSource: 'uuid',
   providedBy: [soundRoutines.loadAll]
 })
 
