@@ -11,8 +11,8 @@
 
 Store domain objects in one place and operate on it. Originally inspired by redux-form, redux-routines and normalizr. The entity store is agnostic to the technology you use to get the data, it can be redux saga, ngrx, or even plain promises. It react to redux actions.
 
-1. [Routines](./docs/routines.md)
 1. [Identifiers](./docs/identifiers.md)
+1. [Routines](./docs/routines.md)
 1. [Store](./docs/store.md)
 1. [Relationships](./docs/relationships.md)
 1. [Selectors](./docs/selectors.md)
