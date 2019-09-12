@@ -299,4 +299,191 @@ describe('EntityStore', () => {
     const selector = store.createFindSelector(idSelector)
     expect(selector(state)).toEqual(null)
   })
+
+  it('getViewEntities selector throws given view is not configured', () => {
+    const store = createEntityStore({
+      identSource: 'uuid',
+      name: 'user'
+    })
+    store.initialize('stuff')
+    const state = {
+      stuff: {
+        entities: {
+          user: [
+            { uuid: '1' },
+            { uuid: '2' }
+          ]
+        },
+        views: {
+          TEST_VIEW: {
+            entities: ['1', '2']
+          }
+        }
+      }
+    }
+    expect(() => store.getViewEntities(state, 'TEST_VIEW')).toThrow('Entity "user" does not belong to view "TEST_VIEW"')
+  })
+
+  it('getViewEntities selector returns view entities', () => {
+    const routine = createAsyncRoutine('TEST_ROUTINE')
+    const store = createEntityStore({
+      identSource: 'uuid',
+      name: 'user',
+      views: [
+        { name: 'TEST_VIEW', routine }
+      ]
+    })
+    store.initialize('stuff')
+    const state = {
+      stuff: {
+        entities: {
+          user: [
+            { uuid: '1' },
+            { uuid: '2' }
+          ]
+        },
+        views: {
+          TEST_VIEW: {
+            entities: ['1', '2']
+          }
+        }
+      }
+    }
+    expect(store.getViewEntities(state, 'TEST_VIEW')).toEqual([
+      { uuid: '1' },
+      { uuid: '2' }
+    ])
+  })
+
+  it('getViewEntities selector returns empty array given view is not in the state', () => {
+    const routine = createAsyncRoutine('TEST_ROUTINE')
+    const store = createEntityStore({
+      identSource: 'uuid',
+      name: 'user',
+      views: [
+        { name: 'TEST_VIEW', routine }
+      ]
+    })
+    store.initialize('stuff')
+    const state = {
+      stuff: {
+        entities: {
+          user: [
+            { uuid: '1' },
+            { uuid: '2' }
+          ]
+        },
+        views: {}
+      }
+    }
+    expect(store.getViewEntities(state, 'TEST_VIEW')).toEqual([])
+  })
+
+  it('getViewEntities selector returns empty array view entities are not in the state', () => {
+    const routine = createAsyncRoutine('TEST_ROUTINE')
+    const store = createEntityStore({
+      identSource: 'uuid',
+      name: 'user',
+      views: [
+        { name: 'TEST_VIEW', routine }
+      ]
+    })
+    store.initialize('stuff')
+    const state = {
+      stuff: {
+        entities: {
+          user: [
+            { uuid: '1' },
+            { uuid: '2' }
+          ]
+        },
+        views: {
+          TEST_VIEW: {}
+        }
+      }
+    }
+    expect(store.getViewEntities(state, 'TEST_VIEW')).toEqual([])
+  })
+
+  it('getViewProps selector returns view props', () => {
+    const routine = createAsyncRoutine('TEST_ROUTINE')
+    const store = createEntityStore({
+      identSource: 'uuid',
+      name: 'user',
+      views: [
+        { name: 'TEST_VIEW', routine }
+      ]
+    })
+    store.initialize('stuff')
+    const state = {
+      stuff: {
+        entities: {
+          user: [
+            { uuid: '1' },
+            { uuid: '2' }
+          ]
+        },
+        views: {
+          TEST_VIEW: {
+            props: {
+              foo: 'bar'
+            }
+          }
+        }
+      }
+    }
+    expect(store.getViewProps(state, 'TEST_VIEW')).toEqual({
+      foo: 'bar'
+    })
+  })
+
+  it('getViewProps returns empty props given props are missing in view state', () => {
+    const routine = createAsyncRoutine('TEST_ROUTINE')
+    const store = createEntityStore({
+      identSource: 'uuid',
+      name: 'user',
+      views: [
+        { name: 'TEST_VIEW', routine }
+      ]
+    })
+    store.initialize('stuff')
+    const state = {
+      stuff: {
+        entities: {
+          user: [
+            { uuid: '1' },
+            { uuid: '2' }
+          ]
+        },
+        views: {
+          TEST_VIEW: {}
+        }
+      }
+    }
+    expect(store.getViewProps(state, 'TEST_VIEW')).toEqual({})
+  })
+
+  it('getViewProps returns empty props given view is missing in state', () => {
+    const routine = createAsyncRoutine('TEST_ROUTINE')
+    const store = createEntityStore({
+      identSource: 'uuid',
+      name: 'user',
+      views: [
+        { name: 'TEST_VIEW', routine }
+      ]
+    })
+    store.initialize('stuff')
+    const state = {
+      stuff: {
+        entities: {
+          user: [
+            { uuid: '1' },
+            { uuid: '2' }
+          ]
+        },
+        views: {}
+      }
+    }
+    expect(store.getViewProps(state, 'TEST_VIEW')).toEqual({})
+  })
 })

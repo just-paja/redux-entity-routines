@@ -27,7 +27,7 @@ export function createEntitiesReducer (...stores) {
 export function connectReducers (mountPoint, ...stores) {
   const reducers = {
     [STORE_ENTITIES]: connectEntitiesReducers(mountPoint, ...stores),
-    [STORE_OPERATIONS]: operations,
+    [STORE_OPERATIONS]: operations
   }
   const viewReducer = createViewsReducer(mountPoint, ...stores)
   if (viewReducer) {

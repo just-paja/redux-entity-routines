@@ -41,8 +41,15 @@ export type Ident = any;
 
 export type RoutineDict<Model> = StoreMap<AsyncRoutine<any, Model>>;
 
+export interface EntityCollectionSelector<StateType, Model> {
+  (state: StateType): Model[];
+}
+
+export interface ViewSelector<StateType, Model> {
+  (state: StateType, viewName: string): Model;
+}
+
 export interface EntitySelector<StateType, Model> {
-  (state: StateType): Model;
   (state: StateType, ident: Ident): Model;
 }
 
@@ -51,18 +58,21 @@ export interface IdentSelector<StateType> {
 }
 
 export interface PropSelector<StateType, PropType> {
-  (state: StateType, ident: Ident): PropType;
+  (state: StateType, ident: Ident, propName: string): PropType;
 }
 
-export interface EntityStore<Model> {
-  createFindSelector: (identSelector: IdentSelector<any>) => EntitySelector<any, Model>;
-  getAll: EntitySelector<any, Model[]>;
-  getCollection: EntitySelector<any, Model[]>;
-  getObject: EntitySelector<any, Model>;
-  getProp: PropSelector<any, any>;
-  getFlag: PropSelector<any, boolean>;
-  getSize: EntitySelector<any, number>;
-  isEmpty: EntitySelector<any, boolean>;
+export interface EntityStore<Model, StateType = any> {
+  createFindSelector: (identSelector: IdentSelector<StateType>) => EntitySelector<StateType, Model>;
+  getAll: EntityCollectionSelector<StateType, Model>;
+  getCollection: EntityCollectionSelector<StateType, Model>;
+  getFlag: PropSelector<StateType, boolean>;
+  getObject: EntitySelector<StateType, Model>;
+  getProp: PropSelector<StateType, any>;
+  getSize: EntitySelector<StateType, number>;
+  getView: ViewSelector<StateType, ViewState>;
+  getViewEntities: ViewSelector<StateType, Model[]>;
+  getViewProps: ViewSelector<StateType, any>;
+  isEmpty: EntitySelector<StateType, boolean>;
   name: string;
 }
 
