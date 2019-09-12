@@ -121,10 +121,6 @@ export class EntityConfig extends NamedObject {
     return config ? config[this.name] : null
   }
 
-  hasView (viewName) {
-    return this.views && this.views.some(view => view.name === viewName)
-  }
-
   resolveIdent (item) {
     return typeof item === 'string' ? item : this.resolveEntityIdent(item) || null
   }

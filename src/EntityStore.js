@@ -5,31 +5,34 @@ import { getFirstSelectorArg, getFlag, getProp, getSecondSelectorArg } from './s
 import { NamedObject } from './NamedObject'
 import { STORE_ENTITIES, STORE_VIEWS } from './constants'
 
+import camelCase from 'camelcase'
 import jp from 'jsonpath'
 
 class EntityStore extends NamedObject {
+  views = {}
+
   constructor (config) {
     const entityConfig = config instanceof EntityConfig ? config : new EntityConfig(config)
     super(entityConfig.name)
     this.config = entityConfig
+    this.createViewSelector = this.createViewSelector.bind(this)
     this.findItem = this.findItem.bind(this)
     this.getAll = this.getAll.bind(this)
     this.getCollection = this.getCollection.bind(this)
     this.getSize = this.getSize.bind(this)
-    this.getView = this.getView.bind(this)
     this.getViewEntities = this.getViewEntities.bind(this)
+    this.getViewProps = this.getViewProps.bind(this)
     this.isEmpty = this.isEmpty.bind(this)
     this.configureMountPoint()
     this.getObject = createSelector(this.getCollection, getFirstSelectorArg, this.findItem)
     this.getProp = createSelector(this.getObject, getSecondSelectorArg, getProp)
     this.getFlag = createSelector(this.getProp, getFlag)
-    this.getViewEntities = createSelector(this.getAll, this.getView, this.getViewEntities)
-    this.getViewProps = createSelector(this.getView, this.getViewProps)
   }
 
   initialize (mountPoint) {
     this.configureMountPoint(mountPoint)
     this.createReducer()
+    this.createViewsSelectors()
   }
 
   configureMountPoint (mountPoint) {
@@ -39,6 +42,30 @@ class EntityStore extends NamedObject {
 
   createReducer () {
     this.reducer = createEntityReducer(this.config)
+  }
+
+  createViewsSelectors () {
+    if (!this.config.views) {
+      return
+    }
+    this.views = this.config.views.reduce((acc, view) => ({
+      ...acc,
+      [camelCase(view.name)]: this.createViewSelectors(view)
+    }), {})
+  }
+
+  createViewSelectors (view) {
+    return {
+      getEntities: createSelector(
+        this.getAll,
+        this.createViewSelector(view.name),
+        this.getViewEntities
+      ),
+      getProps: createSelector(
+        this.createViewSelector(view.name),
+        this.getViewProps
+      )
+    }
   }
 
   findItem (items, ident) {
@@ -65,11 +92,11 @@ class EntityStore extends NamedObject {
     return this.getAll(state).length
   }
 
-  getView (state, viewName) {
-    if (this.config.hasView(viewName)) {
-      return jp.value(state, [this.viewsMountPoint, viewName].join('.'))
-    }
-    throw new Error(`Entity "${this.config.name}" does not belong to view "${viewName}"`)
+  createViewSelector (viewName) {
+    return createSelector(
+      state => jp.value(state, this.viewsMountPoint),
+      views => views[viewName]
+    )
   }
 
   getViewEntities (entities, view) {

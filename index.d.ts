@@ -47,6 +47,12 @@ export type PropSelector<StateType, PropType> = (state: StateType, ident: Ident,
 
 export type ViewPropMap = StoreMap<any>;
 export type ViewSelector<StateType, Model> = (state: StateType, viewName: string) => Model;
+export type ViewSelectorMap<StateType, Model> = StoreMap<ViewSelectors<StateType, Model>>;
+
+export interface ViewSelectors<StateType, Model> {
+  getEntities: ViewSelector<StateType, Model>;
+  getProps: ViewSelector<StateType, ViewPropMap>;
+}
 
 export interface EntityStore<Model, StateType = any> {
   createFindSelector: (identSelector: IdentSelector<StateType>) => EntitySelector<StateType, Model>;
@@ -56,11 +62,9 @@ export interface EntityStore<Model, StateType = any> {
   getObject: EntitySelector<StateType, Model>;
   getProp: PropSelector<StateType, any>;
   getSize: EntitySelector<StateType, number>;
-  getView: ViewSelector<StateType, ViewState>;
-  getViewEntities: ViewSelector<StateType, Model[]>;
-  getViewProps: ViewSelector<StateType, any>;
   isEmpty: EntitySelector<StateType, boolean>;
   name: string;
+  views: ViewSelectorMap<StateType, Model>;
 }
 
 export type ItemReducer<Model> = (state: Model, action: FluxAction<Partial<Model>>) => Model;
