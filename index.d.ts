@@ -76,7 +76,10 @@ export interface RelationConfig {
 export interface ViewConfig<PayloadType, MetaType = void> {
   name: string;
   props?: JsonPathMap;
-  routine: Routine<PayloadType, MetaType>;
+  routine: (
+    Routine<PayloadType | PayloadType[], MetaType> |
+    AsyncRoutine<any, PayloadType | PayloadType[], MetaType>
+  );
 }
 
 export interface OperationState {
