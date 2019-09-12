@@ -18,7 +18,7 @@ function createViewReducer (store, viewConfig) {
       return state
     }
     const path = store.config.getRoutineEntityPath(action)
-    const entities = getIdents(store.config, jp.value(action.payload, path))
+    const entities = getIdents(store.config, path ? jp.value(action.payload, path) : action.payload)
     return {
       entities,
       props: viewConfig.props

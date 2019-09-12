@@ -116,6 +116,36 @@ describe('store', () => {
     ]))
   })
 
+  it('stores view entities given there is no entity path', () => {
+    const routine = createAsyncRoutine('TEST')
+    const userStore = createEntityStore({
+      identSource: 'id',
+      name: 'user',
+      providedBy: [routine],
+      views: [
+        { name: 'userList', routine }
+      ]
+    })
+    const connected = connectReducers(null, userStore)
+    const action = routine.success([
+      {
+        id: '1701-C',
+        group: { id: '13', name: 'Admin' },
+        name: 'Rachel Garrett'
+      },
+      {
+        id: '1701-D',
+        group: { id: '13', name: 'Admin' },
+        name: 'Jean-Luc Picard'
+      }
+    ])
+    const result = connected.views({}, action)
+    expect(result).toHaveProperty('userList.entities', [
+      '1701-C',
+      '1701-D'
+    ])
+  })
+
   it('stores view entities', () => {
     const routine = createAsyncRoutine('TEST', {
       user: '_embedded.users'
