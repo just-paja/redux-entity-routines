@@ -10,10 +10,7 @@ export interface FluxAction<Model, MetaType = void> {
   type: string;
 }
 
-export interface ActionCreator<Model, MetaType=void> {
-  (payload: Model): FluxAction<Model>;
-  (payload: Model, meta: MetaType): FluxAction<Model>;
-}
+export type ActionCreator<Model, MetaType = void> = (payload: Model, meta: MetaType) => FluxAction<Model>;
 
 export interface Routine<InputType, MetaType = void> {
   (): FluxAction<void>;
@@ -38,28 +35,18 @@ export interface AsyncRoutine<InputType, OutputType, MetaType = void> extends Ro
 }
 
 export type Ident = any;
+export type IdentResolver<Model> = (item: Model) => Ident;
+export type IdentSource<Model> = string | string[] | IdentResolver<Model>;
 
 export type RoutineDict<Model> = StoreMap<AsyncRoutine<any, Model>>;
 
-export interface EntityCollectionSelector<StateType, Model> {
-  (state: StateType): Model[];
-}
+export type EntityCollectionSelector<StateType, Model> = (state: StateType) => Model[];
+export type EntitySelector<StateType, Model> = (state: StateType, ident?: Ident) => Model;
+export type IdentSelector<StateType> = (state: StateType) => Ident;
+export type PropSelector<StateType, PropType> = (state: StateType, ident: Ident, propName: string) => PropType;
 
-export interface ViewSelector<StateType, Model> {
-  (state: StateType, viewName: string): Model;
-}
-
-export interface EntitySelector<StateType, Model> {
-  (state: StateType, ident: Ident): Model;
-}
-
-export interface IdentSelector<StateType> {
-  (state: StateType): Ident;
-}
-
-export interface PropSelector<StateType, PropType> {
-  (state: StateType, ident: Ident, propName: string): PropType;
-}
+export type ViewPropMap = StoreMap<any>;
+export type ViewSelector<StateType, Model> = (state: StateType, viewName: string) => Model;
 
 export interface EntityStore<Model, StateType = any> {
   createFindSelector: (identSelector: IdentSelector<StateType>) => EntitySelector<StateType, Model>;
@@ -76,25 +63,14 @@ export interface EntityStore<Model, StateType = any> {
   name: string;
 }
 
-export interface ItemReducer<Model> {
-  (state: Model, action: FluxAction<Partial<Model>>): Model
-}
+export type ItemReducer<Model> = (state: Model, action: FluxAction<Partial<Model>>) => Model;
 
+export type JsonPathMap = StoreMap<string>;
 export type ReducerMap<Model> = StoreMap<ItemReducer<Model>>;
-
-export interface IdentResolver<Model> {
-  (item: Model): Ident;
-}
-
-export type IdentSource<Model> = string | string[] | IdentResolver<Model>;
 
 export interface RelationConfig {
   attr: string;
   collection: string;
-}
-
-export interface JsonPathMap {
-  [key:string]: string;
 }
 
 export interface ViewConfig<PayloadType, MetaType = void> {
@@ -102,8 +78,6 @@ export interface ViewConfig<PayloadType, MetaType = void> {
   props?: JsonPathMap;
   routine: Routine<PayloadType, MetaType>;
 }
-
-export type ViewPropMap = StoreMap<any>;
 
 export interface OperationState {
   error?: Error;
@@ -131,7 +105,7 @@ export interface GlobalReducerMap {
   views?: ViewReducer;
 }
 
-export interface EntityConfig<Model, MetaType=void> {
+export interface EntityConfig<Model, MetaType = void> {
   belongsTo?: RelationConfig[];
   clearedBy?: (AsyncRoutine<any, Model, MetaType>|AsyncRoutine<any, Model[], MetaType>)[];
   collectionReducers?: ReducerMap<Model[]>;
@@ -145,11 +119,11 @@ export interface EntityConfig<Model, MetaType=void> {
 }
 
 declare module 'redux-entity-store' {
-  function createAsyncRoutine<InputType, OutputType, MetaType=void>(
+  function createAsyncRoutine<InputType, OutputType, MetaType = void>(
     baseName: string
   ): AsyncRoutine<InputType, OutputType, MetaType>;
 
-  function createSyncRoutine<InputType, MetaType=void>(
+  function createSyncRoutine<InputType, MetaType = void>(
     baseName: string
   ): Routine<InputType, MetaType>;
 
@@ -159,7 +133,7 @@ declare module 'redux-entity-store' {
     sync?: boolean
   ): RoutineDict<Model>;
 
-  function createEntityStore<Model>(storeConfig: EntityConfig<Model>): EntityStore<Model>
+  function createEntityStore<Model>(storeConfig: EntityConfig<Model>): EntityStore<Model>;
 
   function createEntitiesReducer(...stores: EntityStore<any>[]): any;
 
