@@ -16,6 +16,9 @@ export interface Routine<InputType, MetaType = void> {
   (): FluxAction<void>;
   (payload: InputType): FluxAction<InputType>;
   (payload: InputType, meta: MetaType): FluxAction<InputType, MetaType>;
+  routineName: string;
+  SUCCESS: string;
+  sync: boolean;
   trigger: ActionCreator<InputType>;
   TRIGGER: string;
 }
