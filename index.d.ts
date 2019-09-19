@@ -128,13 +128,17 @@ export interface EntityConfig<Model, MetaType = void> {
   views?: ViewConfig<Model, MetaType>[];
 }
 
+export type EntityMap = StoreMap<string>;
+
 declare module 'redux-entity-store' {
   function createAsyncRoutine<InputType, OutputType, MetaType = void>(
-    baseName: string
+    baseName: string,
+    entityMap?: EntityMap
   ): AsyncRoutine<InputType, OutputType, MetaType>;
 
   function createSyncRoutine<InputType, MetaType = void>(
-    baseName: string
+    baseName: string,
+    entityMap?: EntityMap
   ): Routine<InputType, MetaType>;
 
   function createEntityRoutines<Model>(
