@@ -12,18 +12,19 @@ export interface FluxAction<Model, MetaType = void> {
 
 export type ActionCreator<Model, MetaType = void> = (payload: Model, meta: MetaType) => FluxAction<Model>;
 
-export interface Routine<InputType, MetaType = void> {
+export interface Routine<InputType, OutputType=InputType, MetaType = void> {
   (): FluxAction<void>;
-  (payload: InputType): FluxAction<InputType>;
   (payload: InputType, meta: MetaType): FluxAction<InputType, MetaType>;
+  (payload: InputType): FluxAction<InputType>;
   routineName: string;
+  success: ActionCreator<OutputType, MetaType>;
   SUCCESS: string;
   sync: boolean;
-  trigger: ActionCreator<InputType>;
+  trigger: ActionCreator<InputType, MetaType>;
   TRIGGER: string;
 }
 
-export interface AsyncRoutine<InputType, OutputType, MetaType = void> extends Routine<InputType> {
+export interface AsyncRoutine<InputType, OutputType, MetaType = void> extends Routine<InputType, OutputType, MetaType> {
   failure: ActionCreator<Error, MetaType>;
   FAILURE: string;
   fulfill: ActionCreator<InputType, MetaType>;
@@ -33,8 +34,6 @@ export interface AsyncRoutine<InputType, OutputType, MetaType = void> extends Ro
   isLoading: (state: any) => boolean;
   request: ActionCreator<InputType, MetaType>;
   REQUEST: string;
-  success: ActionCreator<OutputType, MetaType>;
-  SUCCESS: string;
 }
 
 export type Ident = any;
@@ -83,10 +82,7 @@ export interface RelationConfig {
 export interface ViewConfig<PayloadType, MetaType = void> {
   name: string;
   props?: JsonPathMap;
-  routine: (
-    Routine<PayloadType | PayloadType[], MetaType> |
-    AsyncRoutine<any, PayloadType | PayloadType[], MetaType>
-  );
+  routine: Routine<any, PayloadType | PayloadType[], MetaType>;
 }
 
 export interface OperationState {
@@ -117,14 +113,14 @@ export interface GlobalReducerMap {
 
 export interface EntityConfig<Model, MetaType = void> {
   belongsTo?: RelationConfig[];
-  clearedBy?: (AsyncRoutine<any, Model, MetaType>|AsyncRoutine<any, Model[], MetaType>)[];
+  clearedBy?: (AsyncRoutine<any, Model | Model[], MetaType>)[];
   collectionReducers?: ReducerMap<Model[]>;
-  deletedBy?: (AsyncRoutine<any, Model, MetaType>|AsyncRoutine<any, Model[], MetaType>)[];
+  deletedBy?: (AsyncRoutine<any, Model | Model[], MetaType>)[];
   hasManyToMany?: RelationConfig[];
   identSource: IdentSource<Model>;
   name: string;
   on?: ReducerMap<Model>;
-  providedBy?: (AsyncRoutine<any, Model, MetaType>|AsyncRoutine<any, Model[], MetaType>)[];
+  providedBy?: (AsyncRoutine<any, Model | Model[], MetaType>)[];
   views?: ViewConfig<Model, MetaType>[];
 }
 
@@ -136,10 +132,10 @@ declare module 'redux-entity-store' {
     entityMap?: EntityMap
   ): AsyncRoutine<InputType, OutputType, MetaType>;
 
-  function createSyncRoutine<InputType, MetaType = void>(
+  function createSyncRoutine<InputType, OutputType=InputType, MetaType = void>(
     baseName: string,
     entityMap?: EntityMap
-  ): Routine<InputType, MetaType>;
+  ): Routine<InputType, OutputType, MetaType>;
 
   function createEntityRoutines<Model>(
     entity: string,
