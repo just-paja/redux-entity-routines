@@ -52,7 +52,7 @@ export type ViewSelector<StateType, Model> = (state: StateType, viewName: string
 export type ViewSelectorMap<StateType, Model> = StoreMap<ViewSelectors<StateType, Model>>;
 
 export interface ViewSelectors<StateType, Model> {
-  getEntities: ViewSelector<StateType, Model>;
+  getEntities: ViewSelector<StateType, Model[]>;
   getProps: ViewSelector<StateType, ViewPropMap>;
 }
 
