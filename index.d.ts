@@ -48,7 +48,7 @@ export type IdentSelector<StateType> = (state: StateType) => Ident;
 export type PropSelector<StateType, PropType> = (state: StateType, ident: Ident, propName: string) => PropType;
 
 export type ViewPropMap = StoreMap<any>;
-export type ViewSelector<StateType, Model> = (state: StateType, viewName: string) => Model;
+export type ViewSelector<StateType, Model> = (state: StateType) => Model;
 export type ViewSelectorMap<StateType, Model> = StoreMap<ViewSelectors<StateType, Model>>;
 
 export interface ViewSelectors<StateType, Model> {
