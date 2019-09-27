@@ -27,12 +27,12 @@ class EntityStore extends NamedObject {
     this.getObject = createSelector(this.getCollection, getFirstSelectorArg, this.findItem)
     this.getProp = createSelector(this.getObject, getSecondSelectorArg, getProp)
     this.getFlag = createSelector(this.getProp, getFlag)
+    this.createViewsSelectors()
   }
 
   initialize (mountPoint) {
     this.configureMountPoint(mountPoint)
     this.createReducer()
-    this.createViewsSelectors()
   }
 
   configureMountPoint (mountPoint) {
