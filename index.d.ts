@@ -113,9 +113,9 @@ export interface GlobalReducerMap {
 
 export interface EntityConfig<Model, MetaType = void> {
   belongsTo?: RelationConfig[];
-  clearedBy?: (AsyncRoutine<any, Model | Model[], MetaType>)[];
+  clearedBy?: (AsyncRoutine<any, any, MetaType>)[];
   collectionReducers?: ReducerMap<Model[]>;
-  deletedBy?: (AsyncRoutine<any, Model | Model[], MetaType>)[];
+  deletedBy?: (AsyncRoutine<any, Model | Model[] | Ident | Ident[], MetaType>)[];
   hasManyToMany?: RelationConfig[];
   identSource: IdentSource<Model>;
   name: string;
