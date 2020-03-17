@@ -30,7 +30,7 @@
   "dependencies": {
     "camelcase": "^5.3.1",
     "jsonpath": "^1.0.2",
-    "redux": "^4.0.4",
+    "redux": "^4.0.5",
     "reselect": "^4.0.0"
   },
   "files": [
@@ -46,14 +46,14 @@
     "parser": "babel-eslint"
   },
   "devDependencies": {
-    "@babel/cli": "^7.6.2",
-    "@babel/plugin-proposal-class-properties": "^7.5.5",
-    "@babel/plugin-proposal-object-rest-spread": "^7.6.2",
-    "@babel/preset-env": "^7.6.2",
-    "babel-eslint": "^10.0.3",
-    "jest": "^24.9.0",
+    "@babel/cli": "^7.8.4",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/plugin-proposal-object-rest-spread": "^7.8.3",
+    "@babel/preset-env": "^7.8.7",
+    "babel-eslint": "^10.1.0",
+    "jest": "^25.1.0",
     "jest-runner-standard": "0.0.13",
-    "rimraf": "^3.0.0",
-    "standard": "^14.3.1"
+    "rimraf": "^3.0.2",
+    "standard": "^14.3.3"
   }
 }
